@@ -16,3 +16,6 @@
 *.out
 *.app
 *.x86_64
+
+# Automake shite
+.deps
