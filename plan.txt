@@ -33,26 +33,7 @@ Theme - Medieval
 
 ===First, landscape of game
 Nice sunny grassland with some forests and lakes.
-Typical background is rgb(34, 139, 34) with generated grass (must be drawn pixel by pixel)
-How to generate:
-	srand((unsigned int) time(NULL));
-	
-	struct grass_tile {
-		int pixels;
-		// I recognize this won't compile
-		int r [pixels];
-		int g [pixels];
-		int b [pixels];
-	}
-	
-	for (grass_tiles in world) {
-		for (int i = 0; i < grass_tile.pixels; i++) {
-			call method that will adjust r, g, and b in grass_tile by lighten or darken rgb(34, 139, 34) by a random percent
-		}
-	}
-	
-Something similar would, of course, work.  Memory could be an issue.
-
+Typical background is rgb(34, 139, 34) with some grass stuff
 Castles take up 8 tiles.  That can be either one middle with the surrounding tiles or any other combination (randomly generate).  Castles are generally gray.  Maybe some special ones could be red, blue, green, etc.
 Inside castles are little shops and outside are farms.
 Outside castles are farms.
