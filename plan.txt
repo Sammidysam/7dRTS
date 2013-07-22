@@ -23,3 +23,5 @@ Therefore, needed are
 					x * sqrt(tiles in board) + y
 		Faith in leader
 			When too low, can abandon nation and become barbarious
+			
+For better plan place, see https://docs.google.com/document/d/1BqSgXNCxY7VzTBkaB4tIOYltEiGFg7OFowLoNTGuUVQ/edit
