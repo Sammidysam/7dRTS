@@ -33,8 +33,3 @@ missing
 config.h
 config.h.in
 stamp-h1
-compile
-
-# Autosaves
-*~
-*.swp

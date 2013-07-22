@@ -1,5 +1,2 @@
-AM_CFLAGS=-Wall -std=c11 -lGL -lGLU -lglut 
-
 bin_PROGRAMS=7dRTS
 7dRTS_SOURCES=main.c
-7dRTS_CFLAGS=$(AM_CFLAGS)
