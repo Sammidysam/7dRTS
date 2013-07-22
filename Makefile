@@ -6,6 +6,8 @@ GAME_NAME=$(shell basename $(shell pwd))
 
 COMPILER=gcc
 
+FLAGS:=-lpng
+
 COMPILEFLAGS=$(FLAGS) -Isrc -lGL -lGLU -lglut -ggdb -std=c11 
 LINKFLAGS=$(FLAGS) -Isrc -lGL -lGLU -lglut -ggdb -std=c11 
 

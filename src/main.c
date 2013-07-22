@@ -1,8 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include <texture.h>
+
+#include <png.h>
 #include <GL/glut.h>
 
+
 double rAngle = 0.0;
+
+typedef enum tile_type_t {
+	TILE_TYPE_GRASS,
+	TILE_TYPE_FOREST,
+	TILE_TYPE_LAKE,
+	
+	TILE_TYPE_MAX
+} tile_type_t;
+
+typedef struct tile_t {
+	double min;
+	double max;
+
+	tile_type_t tile_type;
+
+	texture_t *texture;
+} tile_t;
+
+texture_t *grass_texture;
+texture_t *forest_texture;
+texture_t *lake_texture;
+texture_t *error_texture;
 
 void handle_key_press(unsigned char key, int x, int y)
 {
@@ -12,9 +40,29 @@ void handle_key_press(unsigned char key, int x, int y)
 	}
 }
 
+void load_textures()
+{
+	grass_texture = texture_new();
+	forest_texture = texture_new();
+	lake_texture = texture_new();
+	error_texture = texture_new();
+
+	texture_load(grass_texture, "img/grass.png");
+	texture_load(forest_texture, "img/forest.png");
+	texture_load(lake_texture, "img/lake.png");
+	texture_load(error_texture, "img/error.png");
+}
+
 void init_rendering()
 {
+	glShadeModel(GL_SMOOTH);
+
 	glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	load_textures();
 }
 
 void handle_resize(int w, int h)
