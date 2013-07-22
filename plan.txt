@@ -1,0 +1,25 @@
+Open-ended
+Grid
+Teams placed at random-like locations
+Teams can get settlers to get new territory
+Armies remove settled state from territory
+	Either die when doing so or take damage
+Armies are naturally gained
+Armies can be sped up with a loss of faith in nation by leader
+	If too low, territory is given to a new nation
+	
+Therefore, needed are
+	A list of nations
+	A list of armies in each nation (2D list?)
+	In army
+		# of units
+		health = # of units / max
+		location
+			Use 2D and 1D system
+				1D to 2D
+					x = pos / sqrt(tiles in board)
+					y = pos % (int) sqrt(tiles in board)
+				2D to 1D
+					x * sqrt(tiles in board) + y
+		Faith in leader
+			When too low, can abandon nation and become barbarious
