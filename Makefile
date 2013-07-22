@@ -11,8 +11,8 @@ FLAGS:=-lpng
 COMPILEFLAGS=$(FLAGS) -Isrc -lGL -lGLU -lglut -ggdb -std=c11 
 LINKFLAGS=$(FLAGS) -Isrc -lGL -lGLU -lglut -ggdb -std=c11 
 
-HEADERS=$(wildcard src/*.h)$(wildcard src/*/*.h)
-PROGRAMOBJECTS=$(patsubst src/%.c,obj/%.o,$(wildcard src/*.c))$(patsubst src/%.c,obj/%.o,$(wildcard src/*/*.c))
+HEADERS=$(wildcard src/*.h) $(wildcard src/*/*.h)
+PROGRAMOBJECTS=$(patsubst src/%.c,obj/%.o,$(wildcard src/*.c)) $(patsubst src/%.c,obj/%.o,$(wildcard src/*/*.c))
 
 PROGRAM=bin/$(GAME_NAME).$(shell arch)
 
