@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 
+#define ESCAPE 27
+
 double rAngle = 0.0;
 
 void handle_key_press(unsigned char key, int x, int y)
 {
 	switch(key) {
-	case 27:
+	case ESCAPE:
 		exit(0);
 	}
 }

@@ -1,3 +1,4 @@
+OLD PLAN BELOW
 Open-ended
 Grid
 Teams placed at random-like locations
@@ -23,5 +24,57 @@ Therefore, needed are
 					x * sqrt(tiles in board) + y
 		Faith in leader
 			When too low, can abandon nation and become barbarious
-			
+
+NEW PLAN BELOW
+
+NOTE - drawing must be done dynamically to allow for resizing, if possible
+
+Theme - Medieval
+
+===First, landscape of game
+Nice sunny grassland with some forests and lakes.
+Typical background is rgb(34, 139, 34) with generated grass (must be drawn pixel by pixel)
+How to generate:
+	srand((unsigned int) time(NULL));
+	
+	struct grass_tile {
+		int pixels;
+		// I recognize this won't compile
+		int r [pixels];
+		int g [pixels];
+		int b [pixels];
+	}
+	
+	for (grass_tiles in world) {
+		for (int i = 0; i < grass_tile.pixels; i++) {
+			call method that will adjust r, g, and b in grass_tile by lighten or darken rgb(34, 139, 34) by a random percent
+		}
+	}
+	
+Something similar would, of course, work.  Memory could be an issue.
+
+Castles take up 8 tiles.  That can be either one middle with the surrounding tiles or any other combination (randomly generate).  Castles are generally gray.  Maybe some special ones could be red, blue, green, etc.
+Inside castles are little shops and outside are farms.
+Outside castles are farms.
+In the top right can be information about revolt risk, money, army size, etc.
+In some tiles are lakes, which cannot be traversed.  Maybe later in the game boats could be unlocked.
+In some tiles are forests, which make units move twice as slow.
+Mountain ranges?  I don't think so.
+Instead, sometimes there will be hills where there are three hill types: small, medium, and large.  Large could be considered mountains.  They bring down movement 1/6, 1/3, and 1/2 respectively.
+
+===Next, setup of game
+N teams and some number of tiles that gives good spacing between nations.  Maybe 50 * N by 50 * N or something similar.  REALLY BIG.
+Each team is given 8 castle tiles and 8 farm tiles.
+Farm tiles give food to the citizens, castle tiles allow creation of armies faster.
+Armies can be modified to select the amount of horsemen, archers, swordsman, etc. in them.  For example, you can make a scout force of purely horsemen and they will move faster.
+
+===Ideas
+Maybe bring castle tiles at start down to four?
+
+Art to make:
+	Up/down castle wall
+	Faceaway castle wall
+	Lake
+	Army - humans, knights, trebuchets, 
+
 For better plan place, see https://docs.google.com/document/d/1BqSgXNCxY7VzTBkaB4tIOYltEiGFg7OFowLoNTGuUVQ/edit
