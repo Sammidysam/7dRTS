@@ -1,2 +1,0 @@
-bin_PROGRAMS=7dRTS
-7dRTS_SOURCES=main.c
