@@ -3,10 +3,10 @@
 
 COMPILER=gcc
 
-FLAGS:=-lpng
+FLAGS:=-lpng -lm -Isrc -lGL -lGLU -lglut -lSDL -ggdb -std=c11 
 
-COMPILEFLAGS=$(FLAGS) -Isrc -lGL -lGLU -lglut -ggdb -std=c11 
-LINKFLAGS=$(FLAGS) -Isrc -lGL -lGLU -lglut -ggdb -std=c11 
+COMPILEFLAGS=$(FLAGS) -fPIC
+LINKFLAGS=$(FLAGS)
 
 HEADERS=$(wildcard src/*.h) $(wildcard src/*/*.h)
 PROGRAMOBJECTS=$(patsubst src/%.c,obj/%.o,$(wildcard src/*.c)) $(patsubst src/%.c,obj/%.o,$(wildcard src/*/*.c))

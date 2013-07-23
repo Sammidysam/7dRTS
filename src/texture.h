@@ -25,6 +25,7 @@ static struct gl_texture_t *_texture_read_png_from_file(const char *filename);
 GLuint _texture_load_png_texture(const char *filename);
 
 texture_t *texture_new();
+texture_t *texture_new_from_filename(char *filename);
 
 void texture_load(texture_t *texture, char *filename);
 
