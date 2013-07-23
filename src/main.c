@@ -12,8 +12,8 @@
 // normally good is 0 for development, 1 for release
 int fullscreen = 0;
 
-int window_width = 512;
-int window_height = 512;
+int window_width = 1024;
+int window_height = 768;
 
 int window_midw;
 int window_midh;
@@ -82,19 +82,35 @@ void update(int value)
 	glutTimerFunc(16, update, 0);
 }
 
+void draw_grid()
+{
+	double grid_width = 8.0;
+	double grid_height = 6.0;
+	
+	for(double i = -(grid_width / 2.0); i <= (grid_width / 2.0); i += 1.0) {
+		glBegin(GL_LINES);
+		glVertex3d(i, (grid_height / 2.0), -40.0);
+		glVertex3d(i, -(grid_height / 2.0), -40.0);
+		glEnd();
+	}
+	
+	for(double i = -(grid_height / 2.0); i <= (grid_height / 2.0); i += 1.0) {
+		glBegin(GL_LINES);
+		glVertex3d((grid_width / 2.0), i, -40.0);
+		glVertex3d(-(grid_width / 2.0), i, -40.0);
+		glEnd();
+	}
+}
+
 void draw_screen()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
-	glBegin(GL_TRIANGLES); //Begin triangle coordinates
-	glVertex3d(-0.5, 0.5, -5.0);
-	glVertex3d(-1.0, 1.5, -5.0);
-	glVertex3d(-1.5, 0.5, -5.0);
-	glEnd(); //End triangle coordinates
 	
-	glutSwapBuffers(); //Send the 3D scene to the screen
+	draw_grid();
+	
+	glutSwapBuffers();
 }
 
 int main(int argc, char *argv[])
