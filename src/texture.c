@@ -1,8 +1,11 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 
 #include <texture.h>
 
+#include <GL/glut.h>
 #include <png.h>
 
 static void _texture_get_png_texture_info(int color_type, struct gl_texture_t *texinfo) {
@@ -226,6 +229,12 @@ texture_t *texture_new()
 	texture_t *n = (texture_t *) malloc(sizeof(texture_t));
 
 	return n;
+}
+
+texture_t *texture_new_from_filename(char *filename)
+{
+	texture_t *n = texture_new();
+	texture_load(n, filename);
 }
 
 void texture_load(texture_t *texture, char *filename)

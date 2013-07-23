@@ -9,7 +9,13 @@
 
 #define ESCAPE 27
 
-double rAngle = 0.0;
+int window_width = 512;
+int window_height = 512;
+
+int window_midw;
+int window_midh;
+
+double view_rotx, view_roty, view_rotz;
 
 typedef enum tile_type_t {
 	TILE_TYPE_GRASS,
@@ -32,6 +38,22 @@ texture_t *grass_texture;
 texture_t *forest_texture;
 texture_t *lake_texture;
 texture_t *error_texture;
+
+void handle_mouse_motion(int x, int y)
+{
+	printf("%d %d\n", x - window_midw, y - window_midh);
+
+	view_rotx += x - window_midw / 10.0;
+	view_roty += y - window_midh / 10.0;
+	
+	glutWarpPointer(window_midw, window_midh);
+}
+
+void _set_window_mids(void)
+{
+	window_midw = window_width / 2;
+	window_midh = window_height / 2;
+}
 
 void handle_key_press(unsigned char key, int x, int y)
 {
@@ -68,6 +90,8 @@ void init_rendering()
 
 void handle_resize(int w, int h)
 {
+	window_width = w;
+	window_height = h;
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -76,11 +100,6 @@ void handle_resize(int w, int h)
 
 void update(int value)
 {
-	rAngle += 1.0;
-	if(rAngle > 360.0) {
-		rAngle -= 360.0;
-	}
-
 	glutPostRedisplay();
 	glutTimerFunc(20, update, 0);
 }
@@ -90,7 +109,6 @@ void draw_screen()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glRotated(-rAngle, 0.0, 0.0, -1.0);
 
 	glBegin(GL_TRIANGLES); //Begin triangle coordinates
 	glVertex3d(-0.5, 0.5, -5.0);
@@ -105,11 +123,13 @@ int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(512, 512);
+	glutInitWindowSize(window_width, window_height);
+	_set_window_mids();
 	glutCreateWindow("Simple Animation Test");
 
 	init_rendering();
-	
+
+	glutPassiveMotionFunc(handle_mouse_motion);
 	glutDisplayFunc(draw_screen);
 	glutKeyboardFunc(handle_key_press);
 	glutReshapeFunc(handle_resize);
