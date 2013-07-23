@@ -79,17 +79,69 @@ Army can be of any size, so unit costs:
 	
 Armies hugely have to be built up for them to be good.  You cannot make a fully-fledged army in one day and expect results.  Armies require 1 food per day while outside the castle to stay alive.  You can send food with armies.  Once it hits zero, they will automatically head back to the castle, and if they are out for five days with no food they will desert and become barbarians.
 
-Food is lost at a rate of 1 per castle tile.
+Food is lost at a rate of 1 per non-farm tile.
 
 ======Building
 
-Building farms costs ? food and they take ? days to grow.
+Building farms costs 16 food and they take 4 days to grow.
 
-Building new castle tiles costs ? army points and they take ? days to complete.
+Building a new castle wall costs 7 stone and a new tower costs 7 stone and 4 wood.
+
+Building a new mine costs 5 stone.
+
+Building a new forestry costs 5 stone.
 
 ======Resources
 
 Resources are stone, wood, and food.
+
+Stone can be gotten from mining hills. 1/day
+
+Wood can be gotten from chopping down forests. 1/day
+
+Food can be gotten from farms. 1/day
+
+The player starts with 7 stone, 5 wood, and 0 food.
+
+======Barbarians
+
+Barbarians naturally spawn in forests and are an army that gets food from the forest and walks around attacking any empires they find.  They will normally attack farms to destroy them then run away.  They will normally get food from the forest.  Then they use that food to walk around.  They are weak.  When attacked, they will likely run away quickly.
+
+======Unit Health
+
+Units have health.
+
+Health for units:
+	Swordsman - 10
+	Horseman - 5
+	Knight - 10
+	Trebuchet - 5
+	Archer - 5
+
+======Battles
+
+--Leaders could be added in the future that affect things, but we can do that after everything else is in.
+
+Battles will occur on a half-day-by-half-day basis.  Damage will be dealt every half day.  Typical damage for units:
+	Swordsman - 5
+	Horseman - 3
+	Knight - 6
+	Trebuchet - 15
+	Archer - 10
+	
+Armies will line up like:
+	Swordsman
+	Horseman/Knight
+	Archer
+	Trebuchet
+	
+Therefore, at the start, swordsman attack swordsman.  Horseman/Knights will do a charge once per day.  If all units of that type are dead in an army, the next line will be attacked.
+
+Archers and trebuchets are ranged.  They attack every half day as well.  Archers have a 2/5 chance of missing and trebuchets have a 4/5 chance of missing.  They deal damage to the front row of people.
+
+At any time, the army can retreat.  In that case, the opposing army can either send their horseman/knights to kill the remaining enemies or let them go.
+
+Damage can be lowered by citizen disapproval.
 
 ======Citizen Disapproval
 
@@ -97,11 +149,12 @@ The citizen disapproval starts at 0 and increases when:
 	Citizens do not eat (1 per day)
 	Country is at war (0.5 per day)
 	Army is too small (0.5 per day)
+	Horseman/Knights kill remaining enemies in a battle (1)
 	Food surplus (-1 per day)
 	Army is "just right" (-1 per day)
 Citizen disapproval cannot go below 0.
 	
-Citizen disapproval affects just about everything.  It increases army and building costs, decreases army power, and many more things (expand list).
+Citizen disapproval affects just about everything.  It increases army and building costs, decreases army power, and armies' effectiveness in battle.
 
 ===Ideas
 PUT COOL IDEAS HERE!
