@@ -149,7 +149,7 @@ The citizen disapproval starts at 0 and increases when:
 	Citizens do not eat (1 per day)
 	Country is at war (0.5 per day)
 	Army is too small (0.5 per day)
-	Horseman/Knights kill remaining enemies in a battle (1)
+	Horseman/Knights kill remaining enemies in a battle when not against barbarians (1)
 	Food surplus (-1 per day)
 	Army is "just right" (-1 per day)
 Citizen disapproval cannot go below 0.
