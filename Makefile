@@ -12,7 +12,7 @@ HEADERS=$(wildcard src/*.h) $(wildcard src/*/*.h)
 PROGRAMOBJECTS=$(patsubst src/%.c,obj/%.o,$(wildcard src/*.c)) $(patsubst src/%.c,obj/%.o,$(wildcard src/*/*.c))
 
 # Just change value of PROGRAMNAME when good name is found
-PROGRAMNAME=game
+PROGRAMNAME=
 PROGRAMFILE=$(if $(PROGRAMNAME),bin/$(PROGRAMNAME).$(shell arch),bin/$(notdir $(shell pwd)).$(shell arch))
 
 all: $(PROGRAMFILE)

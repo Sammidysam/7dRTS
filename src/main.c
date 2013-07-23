@@ -9,11 +9,9 @@
 
 #define KEY_ESCAPE 27
 
-<<<<<<< HEAD
-double rAngle = 0.0;
-int fullscreen = 0; // normally good is 0 for development, 1 for release
-int screen_x = 512, screen_y = 512;
-=======
+// normally good is 0 for development, 1 for release
+int fullscreen = 0;
+
 int window_width = 512;
 int window_height = 512;
 
@@ -21,7 +19,6 @@ int window_midw;
 int window_midh;
 
 double view_rotx, view_roty, view_rotz;
->>>>>>> ddd7d28bdb8836a7c354efe3e5f1d13745635f21
 
 typedef enum tile_type_t {
 	TILE_TYPE_GRASS,
@@ -106,13 +103,6 @@ void handle_resize(int w, int h)
 
 void update(int value)
 {
-<<<<<<< HEAD
-	rAngle += 1.0;
-	if(rAngle > 360.0)
-		rAngle -= 360.0;
-
-=======
->>>>>>> ddd7d28bdb8836a7c354efe3e5f1d13745635f21
 	glutPostRedisplay();
 	glutTimerFunc(16, update, 0);
 }
@@ -137,22 +127,17 @@ int main(int argc, char *argv[])
 	glutInit(&argc, argv);
 	
 	if (fullscreen) {
-		screen_x = glutGet(GLUT_SCREEN_WIDTH) != 0 ? glutGet(GLUT_SCREEN_WIDTH) : screen_x;
-		screen_y = glutGet(GLUT_SCREEN_HEIGHT) != 0 ? glutGet(GLUT_SCREEN_HEIGHT) : screen_y;
+		window_width = glutGet(GLUT_SCREEN_WIDTH) != 0 ? glutGet(GLUT_SCREEN_WIDTH) : window_width;
+		window_height = glutGet(GLUT_SCREEN_HEIGHT) != 0 ? glutGet(GLUT_SCREEN_HEIGHT) : window_height;
 	}
 	
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-<<<<<<< HEAD
-	glutInitWindowSize(screen_x, screen_y);
-	glutCreateWindow("7dRTS Game by four04 and Sammidysam");
-	
-	if (fullscreen)
-		glutFullScreen();
-=======
 	glutInitWindowSize(window_width, window_height);
 	_set_window_mids();
-	glutCreateWindow("Simple Animation Test");
->>>>>>> ddd7d28bdb8836a7c354efe3e5f1d13745635f21
+	glutCreateWindow("7dRTS Game by four04 and Sammidysam");
+
+	if (fullscreen)
+		glutFullScreen();
 
 	init_rendering();
 
