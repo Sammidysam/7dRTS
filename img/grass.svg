@@ -18,6 +18,24 @@
    inkscape:export-filename="/home/kristofer/grass.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.28"
+     inkscape:cx="219.4697"
+     inkscape:cy="226.9449"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1031"
+     inkscape:window-x="0"
+     inkscape:window-y="22"
+     inkscape:window-maximized="1" />
   <defs
      id="defs3145">
     <filter
@@ -100,24 +118,6 @@
          in="result4" />
     </filter>
   </defs>
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="1.8101934"
-     inkscape:cx="237.06041"
-     inkscape:cy="212.73638"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1031"
-     inkscape:window-x="0"
-     inkscape:window-y="22"
-     inkscape:window-maximized="1" />
   <metadata
      id="metadata3148">
     <rdf:RDF>
@@ -126,7 +126,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -136,7 +136,7 @@
      id="layer1"
      transform="translate(0,-540.36218)">
     <rect
-       style="fill:#008000;filter:url(#filter3307)"
+       style="fill:#005500;filter:url(#filter3307)"
        id="rect3151"
        width="512"
        height="512"
