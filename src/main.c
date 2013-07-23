@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <texture.h>
+#include "texture.h"
 
 #include <png.h>
 #include <GL/glut.h>
