@@ -9,14 +9,14 @@
 
 #define KEY_ESCAPE 27
 
-// normally good is 0 for development, 1 for release
+// normally good is: 0 for development, 1 for release
 int fullscreen = 0;
 
 int window_width = 1024;
 int window_height = 768;
 
-int window_midw;
-int window_midh;
+int window_midw = 512;
+int window_midh = 384;
 
 double render_distance = 40.0;
 
@@ -34,9 +34,7 @@ void _set_window_mids(void)
 void handle_key_press(unsigned char key, int x, int y)
 {
 	switch(key) {
-	case 'q':
-	case 'Q':
-	case KEY_ESCAPE:
+	case KEY_ESCAPE: case 'Q': case 'q':
 		exit(0);
 	}
 }
@@ -72,6 +70,7 @@ void handle_resize(int w, int h)
 {
 	window_width = w;
 	window_height = h;
+	_set_window_mids();
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -129,7 +128,8 @@ int main(int argc, char *argv[])
 	
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(window_width, window_height);
-	_set_window_mids();
+	if (fullscreen)
+		_set_window_mids();
 	glutCreateWindow("7dRTS Game by four04 and Sammidysam");
 
 	if (fullscreen)
