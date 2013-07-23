@@ -223,7 +223,7 @@ GLuint _texture_load_png_texture(const char *filename) {
 
 texture_t *texture_new()
 {
-	texture_t *n = (texture_t *) malloc(sizeof(texture_t));
+	texture_t *n = (texture_t *)malloc(sizeof(texture_t));
 
 	return n;
 }

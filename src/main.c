@@ -7,9 +7,11 @@
 #include <png.h>
 #include <GL/glut.h>
 
-#define ESCAPE 27
+#define KEY_ESCAPE 27
 
 double rAngle = 0.0;
+int fullscreen = 0; // normally good is 0 for development, 1 for release
+int screen_x = 512, screen_y = 512;
 
 typedef enum tile_type_t {
 	TILE_TYPE_GRASS,
@@ -29,14 +31,14 @@ typedef struct tile_t {
 } tile_t;
 
 texture_t *grass_texture;
-texture_t *forest_texture;
+texture_t *tree_texture;
 texture_t *lake_texture;
 texture_t *error_texture;
 
 void handle_key_press(unsigned char key, int x, int y)
 {
 	switch(key) {
-	case ESCAPE:
+	case KEY_ESCAPE:
 		exit(0);
 	}
 }
@@ -44,12 +46,12 @@ void handle_key_press(unsigned char key, int x, int y)
 void load_textures()
 {
 	grass_texture = texture_new();
-	forest_texture = texture_new();
+	tree_texture = texture_new();
 	lake_texture = texture_new();
 	error_texture = texture_new();
 
 	texture_load(grass_texture, "img/grass.png");
-	texture_load(forest_texture, "img/forest.png");
+	texture_load(tree_texture, "img/tree.png");
 	texture_load(lake_texture, "img/lake.png");
 	texture_load(error_texture, "img/error.png");
 }
@@ -77,12 +79,11 @@ void handle_resize(int w, int h)
 void update(int value)
 {
 	rAngle += 1.0;
-	if(rAngle > 360.0) {
+	if(rAngle > 360.0)
 		rAngle -= 360.0;
-	}
 
 	glutPostRedisplay();
-	glutTimerFunc(20, update, 0);
+	glutTimerFunc(16, update, 0);
 }
 
 void draw_screen()
@@ -104,16 +105,25 @@ void draw_screen()
 int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
+	
+	if (fullscreen) {
+		screen_x = glutGet(GLUT_SCREEN_WIDTH) != 0 ? glutGet(GLUT_SCREEN_WIDTH) : screen_x;
+		screen_y = glutGet(GLUT_SCREEN_HEIGHT) != 0 ? glutGet(GLUT_SCREEN_HEIGHT) : screen_y;
+	}
+	
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(512, 512);
-	glutCreateWindow("Simple Animation Test");
+	glutInitWindowSize(screen_x, screen_y);
+	glutCreateWindow("7dRTS Game by four04 and Sammidysam");
+	
+	if (fullscreen)
+		glutFullScreen();
 
 	init_rendering();
 	
 	glutDisplayFunc(draw_screen);
 	glutKeyboardFunc(handle_key_press);
 	glutReshapeFunc(handle_resize);
-	glutTimerFunc(20, update, 0);
+	glutTimerFunc(16, update, 0);
 	glutMainLoop();
 
 	return 0;
