@@ -20,9 +20,32 @@ int window_midh;
 
 double render_distance = 40.0;
 
+double zoom = 0.5;
+
+double offset_x = 0.0;
+double offset_y = 0.0;
+
 void handle_mouse_motion(int x, int y)
 {
 	glutWarpPointer(window_midw, window_midh);
+}
+
+void handle_mouse(int button, int state, int x, int y)
+{
+	/* scroll wheel buttons */
+	/* the numbers should be in the config to be safe */
+	if (state != GLUT_UP) {
+		switch (button) {
+		case 3:
+			/* zoom in */
+			render_distance -= zoom;
+			break;
+		case 4:
+			/* zoom out */
+			render_distance += zoom;
+			break;
+		}
+	}
 }
 
 void _set_window_mids(void)
@@ -36,6 +59,24 @@ void handle_key_press(unsigned char key, int x, int y)
 	switch(key) {
 	case KEY_ESCAPE: case 'Q': case 'q':
 		exit(0);
+		break;
+	/* keyboard movement keys should be customizable */
+	case 'W': case 'w':
+		/* move up */
+		offset_y -= zoom;
+		break;
+	case 'S': case 's':
+		/* move down */
+		offset_y += zoom;
+		break;
+	case 'A': case 'a':
+		/* move left */
+		offset_x -= zoom;
+		break;
+	case 'D': case 'd':
+		/* move right */
+		offset_x += zoom;
+		break;
 	}
 }
 
@@ -89,18 +130,18 @@ void draw_grid()
 	double grid_height = 6.0;
 
 	/* draw vertical lines */
-	for(double i = -(grid_width / 2.0); i <= (grid_width / 2.0); i += 1.0) {
+	for(double i = -(grid_width / 2.0) + offset_x; i <= (grid_width / 2.0) + offset_x; i += 1.0) {
 		glBegin(GL_LINES);
-		glVertex3d( i,  (grid_height / 2.0), -(render_distance));
-		glVertex3d( i, -(grid_height / 2.0), -(render_distance));
+		glVertex3d( i,  (grid_height / 2.0) + offset_y, -(render_distance));
+		glVertex3d( i, -(grid_height / 2.0) + offset_y, -(render_distance));
 		glEnd();
 	}
 
 	/* draw horizontal lines */
-	for(double i = -(grid_height / 2.0); i <= (grid_height / 2.0); i += 1.0) {
+	for(double i = -(grid_height / 2.0) + offset_y; i <= (grid_height / 2.0) + offset_y; i += 1.0) {
 		glBegin(GL_LINES);
-		glVertex3d( (grid_width / 2.0),  i, -(render_distance));
-		glVertex3d(-(grid_width / 2.0),  i, -(render_distance));
+		glVertex3d( (grid_width / 2.0) + offset_x,  i, -(render_distance));
+		glVertex3d(-(grid_width / 2.0) + offset_x,  i, -(render_distance));
 		glEnd();
 	}
 }
@@ -112,7 +153,6 @@ void draw_screen()
 	glLoadIdentity();
 	
 	draw_grid();
-	render_distance -= 0.1;
 	
 	glutSwapBuffers();
 }
@@ -137,6 +177,7 @@ int main(int argc, char *argv[])
 	init_rendering();
 
 	glutPassiveMotionFunc(handle_mouse_motion);
+	glutMouseFunc(handle_mouse);
 	glutDisplayFunc(draw_screen);
 	glutKeyboardFunc(handle_key_press);
 	glutReshapeFunc(handle_resize);
