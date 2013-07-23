@@ -15,8 +15,8 @@ int fullscreen = 0;
 int window_width = 1024;
 int window_height = 768;
 
-int window_midw = 512;
-int window_midh = 384;
+int window_midw;
+int window_midh;
 
 double render_distance = 40.0;
 
@@ -128,8 +128,7 @@ int main(int argc, char *argv[])
 	
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(window_width, window_height);
-	if (fullscreen)
-		_set_window_mids();
+	_set_window_mids();
 	glutCreateWindow("7dRTS Game by four04 and Sammidysam");
 
 	if (fullscreen)
