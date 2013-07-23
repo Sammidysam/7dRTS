@@ -31,31 +31,104 @@ NOTE - drawing must be done dynamically to allow for resizing, if possible
 
 Theme - Medieval
 
+===Configuration Files
+All numbers in here should be in a configuration file so that they can be easily edited.
+
 ===First, landscape of game
-Nice sunny grassland with some forests and lakes.
-Typical background is rgb(34, 139, 34) with some grass stuff
-Castles take up 8 tiles.  That can be either one middle with the surrounding tiles or any other combination (randomly generate).  Castles are generally gray.  Maybe some special ones could be red, blue, green, etc.
+Nice sunny, looking happy grassland with some forests and lakes.
+Typical background is around rgb(34, 139, 34) with some grass stuff
+Castles take up 4 tiles at the start and can be expanded.  That can be either a 2x2 square or any other combination (randomly generate, but make sure when not a 2x2 that there are some environmental circumstances why e.g. lake nearby, forest nearby, hill nearby, etc.).  Castles are generally gray.  Maybe some special ones could be red, blue, green, etc.
 Inside castles are little shops and outside are farms.
-Outside castles are farms.
 In the top right can be information about revolt risk, money, army size, etc.
-In some tiles are lakes, which cannot be traversed.  Maybe later in the game boats could be unlocked.
+In some tiles are lakes, which cannot be traversed.  Maybe later in the game boats could be unlocked through SCIENCE! (probably should be added once all else is done)
 In some tiles are forests, which make units move twice as slow.
-Mountain ranges?  I don't think so.
-Instead, sometimes there will be hills where there are three hill types: small, medium, and large.  Large could be considered mountains.  They bring down movement 1/6, 1/3, and 1/2 respectively.
+Sometimes there will be hills where there are three hill types: small, medium, and large.  Large could be considered mountains.  They bring down movement 1/6, 1/3, and 1/2 respectively.
 
 ===Next, setup of game
 N teams and some number of tiles that gives good spacing between nations.  Maybe 50 * N by 50 * N or something similar.  REALLY BIG.
-Each team is given 8 castle tiles and 8 farm tiles.
-Farm tiles give food to the citizens, castle tiles allow creation of armies faster.
+Each team is given 4 castle tiles and 9 farm tiles at the start.
+Farm tiles provide food.
+Without food, citizens are more likely to revolt.  Farms can easily be destroyed by barbarians or other invaders, however.  Castle tiles can be taken relatively quickly if there is no wall on the tile.  Otherwise, the wall has to be breached somewhere or they have to come from a side without a wall.
 Armies can be modified to select the amount of horsemen, archers, swordsman, etc. in them.  For example, you can make a scout force of purely horsemen and they will move faster.
 
-===Ideas
-Maybe bring castle tiles at start down to four?
+===Goal of the Game
+The goal of this game is what you make of it.  To sum it up nicely, "To make your empire make an impact of the world."  You can do so by having the happiest citizens, conquering a ton, etc.  Possible goals of the game (more memes?):
+	My people are living the life
+	I conquered everyone
+	All your money are belong to us
+	My castle is the biggest
+	Best science ever
 
+===General Play of the Game
+Everything is happening in real time.  Armies spawn from inside the castle and can move around (but they need food when out).  The speed is determined by the people in the army.
+Speed for units:
+	Swordsman: 1 tile every 4 days
+	Horseman/Knight: 1 tile every 2 days
+	Trebuchet: 1 tile every 6 days
+	Archer: 1 tile every 3 days
+For armies:
+	Average speed of all units in army
+	
+A "day" is about 15-30 seconds.  During which resources are gained.  It takes some army points to make an army.
+Army can be of any size, so unit costs:
+	Swordsman - 1 food, 1 stone
+	Horseman - 2 food
+	Knight - 2 food, 1 stone
+	Trebuchet - 5 food, 14 wood
+	Archer - 1 food, 1 wood
+	
+Armies hugely have to be built up for them to be good.  You cannot make a fully-fledged army in one day and expect results.  Armies require 1 food per day while outside the castle to stay alive.  You can send food with armies.  Once it hits zero, they will automatically head back to the castle, and if they are out for five days with no food they will desert and become barbarians.
+
+Food is lost at a rate of 1 per castle tile.
+
+======Building
+
+Building farms costs ? food and they take ? days to grow.
+
+Building new castle tiles costs ? army points and they take ? days to complete.
+
+======Resources
+
+Resources are stone, wood, and food.
+
+======Citizen Disapproval
+
+The citizen disapproval starts at 0 and increases when:
+	Citizens do not eat (1 per day)
+	Country is at war (0.5 per day)
+	Army is too small (0.5 per day)
+	Food surplus (-1 per day)
+	Army is "just right" (-1 per day)
+Citizen disapproval cannot go below 0.
+	
+Citizen disapproval affects just about everything.  It increases army and building costs, decreases army power, and many more things (expand list).
+
+===Ideas
+PUT COOL IDEAS HERE!
+
+Maybe sqrt sign could be used for a check mark?
 Art to make:
-	Up/down castle wall
-	Faceaway castle wall
+	Castle Textures:
+		Up/down face castle wall (Sam's original tower.png is example)
+		Faceaway castle wall
+		Side castle wall facing left and facing right
+		Castle floor tile for inside walls
+		Some buildings (basically just custom roofs):
+			Carpentry
+			Houses
+			Manor
+			Barracks
+			Market square
 	Lake
-	Army - humans, knights, trebuchets, 
+	Grass
+	Hill (NOT mountain)
+	Texture Error
+	Tree for Forest
+	Army Textures:
+		Swordsman
+		Horseman (no armor)
+		Knight (armor)
+		Trebuchet
+		Archer
 
 For better plan place, see https://docs.google.com/document/d/1BqSgXNCxY7VzTBkaB4tIOYltEiGFg7OFowLoNTGuUVQ/edit
