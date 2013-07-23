@@ -29,4 +29,13 @@ texture_t *texture_new_from_filename(char *filename);
 
 void texture_load(texture_t *texture, char *filename);
 
+texture_t *grass_texture;
+texture_t *forest_texture;
+texture_t *water_texture;
+texture_t *stone_texture;
+texture_t *farm_texture;
+texture_t *castle_wall_texture;
+texture_t *castle_tower_texture;
+texture_t *error_texture;
+
 #endif

@@ -18,37 +18,8 @@ int window_height = 512;
 int window_midw;
 int window_midh;
 
-double view_rotx, view_roty, view_rotz;
-
-typedef enum tile_type_t {
-	TILE_TYPE_GRASS,
-	TILE_TYPE_FOREST,
-	TILE_TYPE_LAKE,
-	
-	TILE_TYPE_MAX
-} tile_type_t;
-
-typedef struct tile_t {
-	double min;
-	double max;
-
-	tile_type_t tile_type;
-
-	texture_t *texture;
-} tile_t;
-
-texture_t *grass_texture;
-texture_t *tree_texture;
-texture_t *lake_texture;
-texture_t *error_texture;
-
 void handle_mouse_motion(int x, int y)
 {
-	//printf("%d %d\n", x - window_midw, y - window_midh);
-
-	view_rotx += x - window_midw / 10.0;
-	view_roty += y - window_midh / 10.0;
-
 	glutWarpPointer(window_midw, window_midh);
 }
 
@@ -71,9 +42,12 @@ void handle_key_press(unsigned char key, int x, int y)
 void load_textures()
 {
 	grass_texture = texture_new_from_filename("img/grass.png");
-	tree_texture = texture_new_from_filename("img/tree.png");
-	lake_texture = texture_new_from_filename("img/water.png");
-	error_texture = texture_new_from_filename("img/error.png");
+	forest_texture = texture_new_from_filename("img/tree/oak.png");
+	water_texture = texture_new_from_filename("img/water.png");
+	stone_texture = texture_new_from_filename("img/stone.png");
+	farm_texture = texture_new_from_filename("img/farm.png");
+	castle_wall_texture = texture_new_from_filename("img/castle/wall/straight.png");
+	castle_tower_texture = texture_new_from_filename("img/castle/tower.png");
 }
 
 void init_rendering()
