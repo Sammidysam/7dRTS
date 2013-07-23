@@ -18,6 +18,8 @@ int window_height = 768;
 int window_midw;
 int window_midh;
 
+double render_distance = 40.0;
+
 void handle_mouse_motion(int x, int y)
 {
 	glutWarpPointer(window_midw, window_midh);
@@ -86,18 +88,20 @@ void draw_grid()
 {
 	double grid_width = 8.0;
 	double grid_height = 6.0;
-	
+
+	/* draw vertical lines */
 	for(double i = -(grid_width / 2.0); i <= (grid_width / 2.0); i += 1.0) {
 		glBegin(GL_LINES);
-		glVertex3d(i, (grid_height / 2.0), -40.0);
-		glVertex3d(i, -(grid_height / 2.0), -40.0);
+		glVertex3d( i,  (grid_height / 2.0), -(render_distance));
+		glVertex3d( i, -(grid_height / 2.0), -(render_distance));
 		glEnd();
 	}
-	
+
+	/* draw horizontal lines */
 	for(double i = -(grid_height / 2.0); i <= (grid_height / 2.0); i += 1.0) {
 		glBegin(GL_LINES);
-		glVertex3d((grid_width / 2.0), i, -40.0);
-		glVertex3d(-(grid_width / 2.0), i, -40.0);
+		glVertex3d( (grid_width / 2.0),  i, -(render_distance));
+		glVertex3d(-(grid_width / 2.0),  i, -(render_distance));
 		glEnd();
 	}
 }
@@ -109,6 +113,7 @@ void draw_screen()
 	glLoadIdentity();
 	
 	draw_grid();
+	render_distance -= 0.1;
 	
 	glutSwapBuffers();
 }
