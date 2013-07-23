@@ -44,7 +44,7 @@ texture_t *error_texture;
 
 void handle_mouse_motion(int x, int y)
 {
-	printf("%d %d\n", x - window_midw, y - window_midh);
+	//printf("%d %d\n", x - window_midw, y - window_midh);
 
 	view_rotx += x - window_midw / 10.0;
 	view_roty += y - window_midh / 10.0;
@@ -72,7 +72,7 @@ void load_textures()
 {
 	grass_texture = texture_new_from_filename("img/grass.png");
 	tree_texture = texture_new_from_filename("img/tree.png");
-	lake_texture = texture_new_from_filename("img/lake.png");
+	lake_texture = texture_new_from_filename("img/water.png");
 	error_texture = texture_new_from_filename("img/error.png");
 }
 
