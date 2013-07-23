@@ -48,7 +48,7 @@ void handle_mouse_motion(int x, int y)
 
 	view_rotx += x - window_midw / 10.0;
 	view_roty += y - window_midh / 10.0;
-	
+
 	glutWarpPointer(window_midw, window_midh);
 }
 
@@ -61,6 +61,8 @@ void _set_window_mids(void)
 void handle_key_press(unsigned char key, int x, int y)
 {
 	switch(key) {
+	case 'q':
+	case 'Q':
 	case KEY_ESCAPE:
 		exit(0);
 	}
@@ -68,15 +70,10 @@ void handle_key_press(unsigned char key, int x, int y)
 
 void load_textures()
 {
-	grass_texture = texture_new();
-	tree_texture = texture_new();
-	lake_texture = texture_new();
-	error_texture = texture_new();
-
-	texture_load(grass_texture, "img/grass.png");
-	texture_load(tree_texture, "img/tree.png");
-	texture_load(lake_texture, "img/lake.png");
-	texture_load(error_texture, "img/error.png");
+	grass_texture = texture_new_from_filename("img/grass.png");
+	tree_texture = texture_new_from_filename("img/tree.png");
+	lake_texture = texture_new_from_filename("img/lake.png");
+	error_texture = texture_new_from_filename("img/error.png");
 }
 
 void init_rendering()
@@ -89,6 +86,10 @@ void init_rendering()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	load_textures();
+
+	glutSetCursor(GLUT_CURSOR_NONE);
+	
+	glutWarpPointer(window_midw, window_midh);
 }
 
 void handle_resize(int w, int h)
