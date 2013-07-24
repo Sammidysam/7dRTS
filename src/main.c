@@ -25,11 +25,6 @@ double zoom = 0.5;
 double offset_x = 0.0;
 double offset_y = 0.0;
 
-void handle_mouse_motion(int x, int y)
-{
-	glutWarpPointer(window_midw, window_midh);
-}
-
 void handle_mouse(int button, int state, int x, int y)
 {
 	/* scroll wheel buttons */
@@ -101,10 +96,6 @@ void init_rendering()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	load_textures();
-
-	glutSetCursor(GLUT_CURSOR_NONE);
-	
-	glutWarpPointer(window_midw, window_midh);
 }
 
 void handle_resize(int w, int h)
@@ -176,7 +167,6 @@ int main(int argc, char *argv[])
 
 	init_rendering();
 
-	glutPassiveMotionFunc(handle_mouse_motion);
 	glutMouseFunc(handle_mouse);
 	glutDisplayFunc(draw_screen);
 	glutKeyboardFunc(handle_key_press);
