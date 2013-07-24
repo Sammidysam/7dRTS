@@ -66,11 +66,11 @@ void handle_key_press(unsigned char key, int x, int y)
 		break;
 	case 'A': case 'a':
 		/* move left */
-		offset_x -= zoom;
+		offset_x += zoom;
 		break;
 	case 'D': case 'd':
 		/* move right */
-		offset_x += zoom;
+		offset_x -= zoom;
 		break;
 	}
 }
