@@ -1,16 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <time.h>
 
 #include "texture.h"
+#include "player.h"
+#include "menu.h"
 
 #include <png.h>
 #include <GL/glut.h>
 
+#define KEY_CTRL_R 18
+#define KEY_CTRL_S 19
+#define KEY_CTRL_W 23
 #define KEY_ESCAPE 27
 
-// normally good is: 0 for development, 1 for release
-int fullscreen = 0;
+#define DEFAULT_RENDER_DISTANCE 40.0
+
+// normally good is: false for development, true for release
+bool fullscreen = false;
 
 int window_width = 1024;
 int window_height = 768;
@@ -20,24 +29,42 @@ int window_midh;
 
 double render_distance = 40.0;
 
+double grid_width = 8.0;
+double grid_height = 6.0;
+
 double zoom = 0.5;
+double move_speed = 0.3;
 
 double offset_x = 0.0;
 double offset_y = 0.0;
 
+bool key_down [256];
+
+bool on_menu = true;
+
+player_t *players;
+
+void zoom_in()
+{
+	render_distance -= zoom;
+}
+
+void zoom_out()
+{
+	render_distance += zoom;
+}
+
 void handle_mouse(int button, int state, int x, int y)
 {
 	/* scroll wheel buttons */
-	/* the numbers should be in the config to be safe */
+	/* the numbers (3, 4 below) should be in the config to be safe */
 	if (state != GLUT_UP) {
 		switch (button) {
 		case 3:
-			/* zoom in */
-			render_distance -= zoom;
+			zoom_in();
 			break;
 		case 4:
-			/* zoom out */
-			render_distance += zoom;
+			zoom_out();
 			break;
 		}
 	}
@@ -49,30 +76,14 @@ void _set_window_mids(void)
 	window_midh = window_height / 2;
 }
 
-void handle_key_press(unsigned char key, int x, int y)
+void handle_key_up(unsigned char key, int x, int y)
 {
-	switch(key) {
-	case KEY_ESCAPE: case 'Q': case 'q':
-		exit(0);
-		break;
-	/* keyboard movement keys should be customizable */
-	case 'W': case 'w':
-		/* move up */
-		offset_y -= zoom;
-		break;
-	case 'S': case 's':
-		/* move down */
-		offset_y += zoom;
-		break;
-	case 'A': case 'a':
-		/* move left */
-		offset_x += zoom;
-		break;
-	case 'D': case 'd':
-		/* move right */
-		offset_x -= zoom;
-		break;
-	}
+	key_down[key] = false;
+}
+
+void handle_key_down(unsigned char key, int x, int y)
+{
+	key_down[key] = true;
 }
 
 void load_textures()
@@ -98,6 +109,12 @@ void init_rendering()
 	load_textures();
 }
 
+void init_game()
+{
+	/* this is to set the array of players in the game */
+	// players = (player_t*)malloc(players * sizeof(player_t));
+}
+
 void handle_resize(int w, int h)
 {
 	window_width = w;
@@ -111,19 +128,53 @@ void handle_resize(int w, int h)
 
 void update(int value)
 {
+	/* handle key presses */
+	for (int i = 0; i < 256; i++) {
+		if (key_down[i]) {
+			switch (i) {
+			case KEY_ESCAPE:
+				exit(0);
+				break;
+			/* keyboard movement keys should be customizable */
+			case 'W': case 'w':
+				/* move up */
+				offset_y -= move_speed;
+				break;
+		   case 'S': case 's':
+				/* move down */
+				offset_y += move_speed;
+				break;
+			case 'A': case 'a':
+				/* move left */
+				offset_x += move_speed;
+				break;
+			case 'D': case 'd':
+				/* move right */
+				offset_x -= move_speed;
+				break;
+			case KEY_CTRL_W:
+				zoom_in();
+				break;
+			case KEY_CTRL_S:
+				zoom_out();
+				break;
+			case KEY_CTRL_R:
+				render_distance = DEFAULT_RENDER_DISTANCE;
+				break;
+			}
+		}
+	}
+	
 	glutPostRedisplay();
 	glutTimerFunc(16, update, 0);
 }
 
 void draw_grid()
 {
-	double grid_width = 8.0;
-	double grid_height = 6.0;
-
 	/* draw vertical lines */
 	for(double i = -(grid_width / 2.0) + offset_x; i <= (grid_width / 2.0) + offset_x; i += 1.0) {
 		glBegin(GL_LINES);
-		glVertex3d( i,  (grid_height / 2.0) + offset_y, -(render_distance));
+		glVertex3d( i,	(grid_height / 2.0) + offset_y, -(render_distance));
 		glVertex3d( i, -(grid_height / 2.0) + offset_y, -(render_distance));
 		glEnd();
 	}
@@ -131,8 +182,8 @@ void draw_grid()
 	/* draw horizontal lines */
 	for(double i = -(grid_height / 2.0) + offset_y; i <= (grid_height / 2.0) + offset_y; i += 1.0) {
 		glBegin(GL_LINES);
-		glVertex3d( (grid_width / 2.0) + offset_x,  i, -(render_distance));
-		glVertex3d(-(grid_width / 2.0) + offset_x,  i, -(render_distance));
+		glVertex3d( (grid_width / 2.0) + offset_x,	i, -(render_distance));
+		glVertex3d(-(grid_width / 2.0) + offset_x,	i, -(render_distance));
 		glEnd();
 	}
 }
@@ -142,14 +193,24 @@ void draw_screen()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	
-	draw_grid();
+
+	if (!on_menu)
+		draw_grid();
+	else
+		draw_menu();
 	
 	glutSwapBuffers();
 }
 
+void clean_up()
+{
+	free(players);
+}
+
 int main(int argc, char *argv[])
 {
+	// srand((unsigned int)time(NULL));
+	
 	glutInit(&argc, argv);
 	
 	if (fullscreen) {
@@ -166,13 +227,17 @@ int main(int argc, char *argv[])
 		glutFullScreen();
 
 	init_rendering();
+	init_game();
 
 	glutMouseFunc(handle_mouse);
 	glutDisplayFunc(draw_screen);
-	glutKeyboardFunc(handle_key_press);
+	glutKeyboardFunc(handle_key_down);
+	glutKeyboardUpFunc(handle_key_up);
 	glutReshapeFunc(handle_resize);
 	glutTimerFunc(16, update, 0);
 	glutMainLoop();
+
+	clean_up();
 
 	return 0;
 }
