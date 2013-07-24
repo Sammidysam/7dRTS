@@ -42,6 +42,14 @@ bool key_down [256];
 
 bool on_menu = true;
 
+char *name = "7dRTS";
+char *description = "A submission for Mini Ludum Dare #44 7dRTS by Kristofer Rye (four04) and Sam Craig (Sammidysam)";
+char *new_game = "New Game";
+char *load_game = "Load Game";
+char *settings = "Settings";
+
+button_t buttons [3];
+
 player_t *players;
 
 void zoom_in()
@@ -61,10 +69,12 @@ void handle_mouse(int button, int state, int x, int y)
 	if (state != GLUT_UP) {
 		switch (button) {
 		case 3:
-			zoom_in();
+			if (!on_menu)
+				zoom_in();
 			break;
 		case 4:
-			zoom_out();
+			if (!on_menu)
+				zoom_out();
 			break;
 		}
 	}
@@ -115,6 +125,13 @@ void init_game()
 	// players = (player_t*)malloc(players * sizeof(player_t));
 }
 
+void init_buttons()
+{
+	buttons[0].text = new_game;
+	buttons[1].text = load_game;
+	buttons[2].text = settings;
+}
+
 void handle_resize(int w, int h)
 {
 	window_width = w;
@@ -138,28 +155,35 @@ void update(int value)
 			/* keyboard movement keys should be customizable */
 			case 'W': case 'w':
 				/* move up */
-				offset_y -= move_speed;
+				if (!on_menu)
+					offset_y -= move_speed;
 				break;
 		   case 'S': case 's':
 				/* move down */
-				offset_y += move_speed;
-				break;
+			   if (!on_menu)
+				   offset_y += move_speed;
+			   break;
 			case 'A': case 'a':
 				/* move left */
-				offset_x += move_speed;
+				if (!on_menu)
+					offset_x += move_speed;
 				break;
 			case 'D': case 'd':
 				/* move right */
-				offset_x -= move_speed;
+				if (!on_menu)
+					offset_x -= move_speed;
 				break;
 			case KEY_CTRL_W:
-				zoom_in();
+				if (!on_menu)
+					zoom_in();
 				break;
 			case KEY_CTRL_S:
-				zoom_out();
+				if (!on_menu)
+					zoom_out();
 				break;
 			case KEY_CTRL_R:
-				render_distance = DEFAULT_RENDER_DISTANCE;
+				if (!on_menu)
+					render_distance = DEFAULT_RENDER_DISTANCE;
 				break;
 			}
 		}
@@ -194,10 +218,14 @@ void draw_screen()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	if (!on_menu)
+	glColor3d(1.0, 1.0, 1.0);
+
+	if (!on_menu) {
 		draw_grid();
-	else
-		draw_menu();
+	} else {
+		draw_menu_text(name, description, window_width, window_height);
+		draw_menu_buttons(buttons, sizeof(buttons) / sizeof(buttons[0]), window_width, window_height);
+	}
 	
 	glutSwapBuffers();
 }
@@ -221,13 +249,16 @@ int main(int argc, char *argv[])
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(window_width, window_height);
 	_set_window_mids();
-	glutCreateWindow("7dRTS Game by four04 and Sammidysam");
+	glutCreateWindow(name);
 
 	if (fullscreen)
 		glutFullScreen();
 
 	init_rendering();
-	init_game();
+	if (!on_menu)
+		init_game();
+	else
+		init_buttons();
 
 	glutMouseFunc(handle_mouse);
 	glutDisplayFunc(draw_screen);
