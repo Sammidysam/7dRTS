@@ -1,6 +1,12 @@
+
+
+#include <GL/glut.h>
+
+#include <point.h>
+#include <global.h>
 #include <grid.h>
 
-void draw_grid(grid_t grid)
+void grid_draw(grid_t grid)
 {
 	/* draw vertical lines */
 	for(double i = -(grid.width / 2.0) + offset_x; i <= (grid.width / 2.0) + offset_x; i += 1.0) {

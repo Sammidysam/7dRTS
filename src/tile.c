@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "texture.h"
+#include <texture.h>
 
-#include "tile.h"
+#include <tile.h>
 
 void _tile_populate_texture_from_type(tile_t *n)
 {
