@@ -7,3 +7,12 @@ There are some `.dll` files that must be packaged with the Windows executable fo
 - libglut0.dll
 - libpng15-15.dll
 - zlib1.dll
+
+Current Priority List
+- Add drawing images on grid
+- Add libconfig support
+- Add settings
+- Add basic gameplay
+- Add how to play
+- Add saving and loading system
+- Add custom font
