@@ -115,49 +115,6 @@ void handle_resize(int w, int h)
 	gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
 }
 
-void select(direction_t direction)
-{
-	layout_t layout = get_button_layout(LEN(buttons));
-
-	if (layout.type == LAYOUT_TYPE_ERROR)
-		return;
-
-	int selected_button;
-	for (int i = 0; i < LEN(buttons); i++)
-		if (buttons[i].selected)
-			selected_button = i;
-
-	int selected_button_x = one_d_x_custom(selected_button, layout.layout_grid);
-	int selected_button_y = one_d_y_custom(selected_button, layout.layout_grid);
-
-	switch (direction) {
-	case DIRECTION_UP:
-		if (selected_button_y > 0) {
-			buttons[selected_button].selected = false;
-			buttons[(selected_button_y - 1) * (int)layout.layout_grid.height + selected_button_x].selected = true;
-		}
-		break;
-	case DIRECTION_DOWN:
-		if (selected_button_y < layout.layout_grid.height - 1) {
-			buttons[selected_button].selected = false;
-			buttons[two_d_to_one_d_custom(make_point(selected_button_x, selected_button_y + 1), layout.layout_grid)].selected = true;
-		}
-		break;
-	case DIRECTION_LEFT:
-		if (selected_button_x > 0) {
-			buttons[selected_button].selected = false;
-			buttons[selected_button_y * (int)layout.layout_grid.height + (selected_button_x - 1)].selected = true;
-		}
-		break;
-	case DIRECTION_RIGHT:
-		if (selected_button_x < layout.layout_grid.width - 1) {
-			buttons[selected_button].selected = false;
-			buttons[selected_button_y * (int)layout.layout_grid.height + (selected_button_x + 1)].selected = true;
-		}
-		break;
-	}
-}
-
 void update(int value)
 {
 	/* handle key presses */
@@ -173,28 +130,28 @@ void update(int value)
 				if (!on_menu)
 					offset_y -= move_speed;
 				else
-					select(DIRECTION_UP);
+					select(DIRECTION_UP, &buttons, LEN(buttons));
 				break;
 		   case 'S': case 's':
 				/* move down */
 			   if (!on_menu)
 				   offset_y += move_speed;
 			   else
-				   select(DIRECTION_DOWN);
+				   select(DIRECTION_DOWN, &buttons, LEN(buttons));
 			   break;
 			case 'A': case 'a':
 				/* move left */
 				if (!on_menu)
 					offset_x += move_speed;
 				else
-					select(DIRECTION_LEFT);
+					select(DIRECTION_LEFT, &buttons, LEN(buttons));
 				break;
 			case 'D': case 'd':
 				/* move right */
 				if (!on_menu)
 					offset_x -= move_speed;
 				else
-					select(DIRECTION_RIGHT);
+					select(DIRECTION_RIGHT, &buttons, LEN(buttons));
 				break;
 			case KEY_CTRL_W:
 				if (!on_menu)

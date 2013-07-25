@@ -10,11 +10,10 @@
 #include <png.h>
 #include <GL/glut.h>
 
-#include "texture.h"
-#include "player.h"
+#include "global.h"
+#include "direction.h"
 #include "menu.h"
 #include "grid.h"
-#include "global.h"
 
 #define KEY_ENTER 13
 #define KEY_CTRL_R 18
@@ -23,17 +22,6 @@
 #define KEY_ESCAPE 27
 
 #define DEFAULT_RENDER_DISTANCE 40.0
-
-#define LEN(x) (sizeof(x) / sizeof(x[0]))
-
-typedef enum direction_t {
-	DIRECTION_UP,
-	DIRECTION_DOWN,
-	DIRECTION_LEFT,
-	DIRECTION_RIGHT,
-
-	DIRECTION_MAX
-} direction_t;
 
 void zoom_in();
 void zoom_out();
@@ -46,7 +34,6 @@ void init_rendering();
 void init_game();
 void init_buttons();
 void handle_resize(int w, int h);
-void select(direction_t direction);
 void update(int value);
 void draw_screen();
 void clean_up();

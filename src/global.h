@@ -1,7 +1,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#include "grid.h"
+#define LEN(x) (sizeof(x) / sizeof(x[0]))
 
 extern int window_width;
 extern int window_height;
@@ -13,7 +13,5 @@ extern double render_distance;
 
 extern double offset_x;
 extern double offset_y;
-
-extern struct grid_t grid;
 
 #endif
