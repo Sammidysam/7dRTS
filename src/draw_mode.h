@@ -1,0 +1,17 @@
+#ifndef DRAW_MODE_H
+#define DRAW_MODE_H
+
+typedef enum draw_mode_t {
+	DRAW_MODE_MENU,
+
+	DRAW_MODE_IN_GAME,
+	DRAW_MODE_LOAD_GAME,
+	DRAW_MODE_HOW_TO_PLAY,
+	DRAW_MODE_SETTINGS,
+
+	DRAW_MODE_ERROR,
+
+	DRAW_MODE_MAX
+} draw_mode_t;
+
+#endif

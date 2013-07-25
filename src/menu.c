@@ -122,7 +122,7 @@ void menu_draw_text(char *name, char *description)
 		glutBitmapCharacter(font, description[i]);
 }
 
-void menu_select(direction_t direction, button_t *buttons[], size_t button_len)
+void menu_select(direction_t direction, button_t *buttons, size_t button_len)
 {
 	layout_t layout = _menu_get_button_layout(button_len);
 
@@ -131,7 +131,7 @@ void menu_select(direction_t direction, button_t *buttons[], size_t button_len)
 
 	int selected_button;
 	for (int i = 0; i < button_len; i++)
-		if (buttons[i]->selected)
+		if (buttons[i].selected)
 			selected_button = i;
 
 	int selected_button_x = point_one_d_x(selected_button, layout.width, layout.height);
@@ -140,26 +140,26 @@ void menu_select(direction_t direction, button_t *buttons[], size_t button_len)
 	switch (direction) {
 	case DIRECTION_UP:
 		if (selected_button_y > 0) {
-			buttons[selected_button]->selected = false;
-			buttons[point_two_d_to_one_d(point_new(selected_button_x, selected_button_y - 1), layout.width, layout.height)]->selected = true;
+			buttons[selected_button].selected = false;
+			buttons[point_two_d_to_one_d(point_new(selected_button_x, selected_button_y - 1), layout.width, layout.height)].selected = true;
 		}
 		break;
 	case DIRECTION_DOWN:
 		if (selected_button_y < layout.height - 1) {
-			buttons[selected_button]->selected = false;
-			buttons[point_two_d_to_one_d(point_new(selected_button_x, selected_button_y + 1), layout.width, layout.height)]->selected = true;
+			buttons[selected_button].selected = false;
+			buttons[point_two_d_to_one_d(point_new(selected_button_x, selected_button_y + 1), layout.width, layout.height)].selected = true;
 		}
 		break;
 	case DIRECTION_LEFT:
 		if (selected_button_x > 0) {
-			buttons[selected_button]->selected = false;
-			buttons[point_two_d_to_one_d(point_new(selected_button_x - 1, selected_button_y), layout.width, layout.height)]->selected = true;
+			buttons[selected_button].selected = false;
+			buttons[point_two_d_to_one_d(point_new(selected_button_x - 1, selected_button_y), layout.width, layout.height)].selected = true;
 		}
 		break;
 	case DIRECTION_RIGHT:
 		if (selected_button_x < layout.width - 1) {
-			buttons[selected_button]->selected = false;
-			buttons[point_two_d_to_one_d(point_new(selected_button_x + 1, selected_button_y), layout.width, layout.height)]->selected = true;
+			buttons[selected_button].selected = false;
+			buttons[point_two_d_to_one_d(point_new(selected_button_x + 1, selected_button_y), layout.width, layout.height)].selected = true;
 		}
 		break;
 	}

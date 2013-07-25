@@ -11,6 +11,7 @@
 #include <direction.h>
 #include <menu.h>
 #include <grid.h>
+#include <draw_mode.h>
 
 #include <main.h>
 
@@ -22,8 +23,6 @@ double move_speed = 0.3;
 
 bool key_down [256];
 
-bool on_menu = true;
-
 char *name = "7dRTS";
 char *description = "A submission for Mini Ludum Dare #44 7dRTS by Kristofer Rye (four04) and Sam Craig (Sammidysam)";
 char *new_game = "New Game";
@@ -33,7 +32,11 @@ char *settings = "Settings";
 
 button_t buttons [4];
 
+grid_t grid;
+
 player_t *players;
+
+draw_mode_t draw_mode = DRAW_MODE_MENU;
 
 void zoom_in()
 {
@@ -50,7 +53,7 @@ void handle_mouse(int button, int state, int x, int y)
 	/* scroll wheel buttons */
 	/* the numbers (3, 4 below) should be in the config to be safe */
 	if (state != GLUT_UP) { 
-		if (!on_menu) {
+		if (draw_mode != DRAW_MODE_MENU) {
 			switch(button) {
 			case 3:
 				zoom_in();
@@ -118,6 +121,10 @@ void init_rendering()
 
 void init_game()
 {
+	/* init grid */
+	grid.width = 8;
+	grid.height = 6;
+	
 	/* this is to set the array of players in the game */
 	// players = (player_t*)malloc(players * sizeof(player_t));
 }
@@ -155,55 +162,69 @@ void update(int value)
 			/* keyboard movement keys should be customizable */
 			case 'W': case 'w':
 				/* move up */
-				if (!on_menu)
+				if (draw_mode != DRAW_MODE_MENU)
 					offset_y -= move_speed;
 				else
 					menu_select(DIRECTION_UP, &buttons, LEN(buttons));
 				break;
 		   case 'S': case 's':
 				/* move down */
-			   if (!on_menu)
+			   if (draw_mode != DRAW_MODE_MENU)
 				   offset_y += move_speed;
 			   else
 				   menu_select(DIRECTION_DOWN, &buttons, LEN(buttons));
 			   break;
 			case 'A': case 'a':
 				/* move left */
-				if (!on_menu)
+				if (draw_mode != DRAW_MODE_MENU)
 					offset_x += move_speed;
 				else
 					menu_select(DIRECTION_LEFT, &buttons, LEN(buttons));
 				break;
 			case 'D': case 'd':
 				/* move right */
-				if (!on_menu)
+				if (draw_mode != DRAW_MODE_MENU)
 					offset_x -= move_speed;
 				else
 					menu_select(DIRECTION_RIGHT, &buttons, LEN(buttons));
 				break;
 			case KEY_CTRL_W:
-				if (!on_menu)
+				if (draw_mode != DRAW_MODE_MENU)
 					zoom_in();
 				break;
 			case KEY_CTRL_S:
-				if (!on_menu)
+				if (draw_mode != DRAW_MODE_MENU)
 					zoom_out();
 				break;
 			case KEY_CTRL_R:
-				if (!on_menu)
+				if (draw_mode != DRAW_MODE_MENU)
 					render_distance = DEFAULT_RENDER_DISTANCE;
 				break;
 			case KEY_ENTER:
-				if (on_menu) {
+				if (draw_mode == DRAW_MODE_MENU) {
 					int selected_button;
 					for (int i = 0; i < LEN(buttons); i++)
 						if (buttons[i].selected)
 							selected_button = i;
-					
-					// if (selected_button == 0) {
-					on_menu = false;
-					init_game();
-					// }
+
+					switch (selected_button) {
+					case 0:
+						init_game();
+						draw_mode = DRAW_MODE_IN_GAME;
+						break;
+					case 1:
+						draw_mode = DRAW_MODE_LOAD_GAME;
+						break;
+					case 2:
+						draw_mode = DRAW_MODE_HOW_TO_PLAY;
+						break;
+					case 3:
+						draw_mode = DRAW_MODE_SETTINGS;
+						break;
+					default:
+						draw_mode = DRAW_MODE_ERROR;
+						break;
+					}
 				}
 			}
 		}
@@ -221,11 +242,26 @@ void draw_screen()
 
 	glColor3d(1.0, 1.0, 1.0);
 
-	if (!on_menu) {
-		grid_draw();
-	} else {
+	switch (draw_mode) {
+	case DRAW_MODE_MENU:
 		menu_draw_text(name, description);
 		menu_draw_buttons(buttons, LEN(buttons));
+		break;
+	case DRAW_MODE_IN_GAME:
+		grid_draw(grid);
+		break;
+	case DRAW_MODE_LOAD_GAME:
+		/* implement */
+		break;
+	case DRAW_MODE_HOW_TO_PLAY:
+		/* implement */
+		break;
+	case DRAW_MODE_SETTINGS:
+		/* implement */
+		break;
+	case DRAW_MODE_ERROR: default:
+		/* draw error texture or something */
+		break;
 	}
 	
 	glutSwapBuffers();
@@ -256,7 +292,7 @@ int main(int argc, char *argv[])
 		glutFullScreen();
 
 	init_rendering();
-	if (!on_menu)
+	if (draw_mode != DRAW_MODE_MENU)
 		init_game();
 	else
 		init_buttons();

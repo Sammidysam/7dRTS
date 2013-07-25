@@ -35,6 +35,6 @@ void menu_set_start_values(double *x_start, double *y_start, layout_t layout, in
 void menu_draw_buttons(button_t buttons[], size_t button_num);
 void menu_draw_text(char *name, char *description);
 
-void menu_select(direction_t direction, button_t *buttons[], size_t button_len);
+void menu_select(direction_t direction, button_t *buttons, size_t button_len);
 
 #endif

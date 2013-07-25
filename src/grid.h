@@ -4,8 +4,8 @@
 #include <tile.h>
 
 typedef struct grid_t {
-	double width;
-	double height;
+	int width;
+	int height;
 
 	tile_t *tiles[];
 } grid_t;
