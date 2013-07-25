@@ -1,4 +1,18 @@
-#include "main.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <time.h>
+
+#include <png.h>
+#include <GL/glut.h>
+
+#include <global.h>
+#include <direction.h>
+#include <menu.h>
+#include <grid.h>
+
+#include <main.h>
 
 // normally good is: false for development, true for release
 bool fullscreen = false;
@@ -144,28 +158,28 @@ void update(int value)
 				if (!on_menu)
 					offset_y -= move_speed;
 				else
-					select(DIRECTION_UP, &buttons, LEN(buttons));
+					menu_select(DIRECTION_UP, &buttons, LEN(buttons));
 				break;
 		   case 'S': case 's':
 				/* move down */
 			   if (!on_menu)
 				   offset_y += move_speed;
 			   else
-				   select(DIRECTION_DOWN, &buttons, LEN(buttons));
+				   menu_select(DIRECTION_DOWN, &buttons, LEN(buttons));
 			   break;
 			case 'A': case 'a':
 				/* move left */
 				if (!on_menu)
 					offset_x += move_speed;
 				else
-					select(DIRECTION_LEFT, &buttons, LEN(buttons));
+					menu_select(DIRECTION_LEFT, &buttons, LEN(buttons));
 				break;
 			case 'D': case 'd':
 				/* move right */
 				if (!on_menu)
 					offset_x -= move_speed;
 				else
-					select(DIRECTION_RIGHT, &buttons, LEN(buttons));
+					menu_select(DIRECTION_RIGHT, &buttons, LEN(buttons));
 				break;
 			case KEY_CTRL_W:
 				if (!on_menu)
@@ -210,8 +224,8 @@ void draw_screen()
 	if (!on_menu) {
 		draw_grid();
 	} else {
-		draw_menu_text(name, description);
-		draw_menu_buttons(buttons, LEN(buttons));
+		menu_draw_text(name, description);
+		menu_draw_buttons(buttons, LEN(buttons));
 	}
 	
 	glutSwapBuffers();

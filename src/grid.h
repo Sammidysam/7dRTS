@@ -3,9 +3,9 @@
 
 #include <GL/glut.h>
 
-#include "tile.h"
-#include "point.h"
-#include "global.h"
+#include <tile.h>
+#include <point.h>
+#include <global.h>
 
 typedef struct grid_t {
 	double width;

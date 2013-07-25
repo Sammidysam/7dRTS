@@ -1,4 +1,4 @@
-#include "global.h"
+#include <global.h>
 
 int window_width = 1024;
 int window_height = 768;

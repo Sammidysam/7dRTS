@@ -1,20 +1,6 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <time.h>
-
-#include <png.h>
-#include <GL/glut.h>
-
-#include "global.h"
-#include "direction.h"
-#include "menu.h"
-#include "grid.h"
-
 #define KEY_ENTER 13
 #define KEY_CTRL_R 18
 #define KEY_CTRL_S 19

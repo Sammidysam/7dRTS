@@ -1,6 +1,15 @@
-#include "menu.h"
+#include <stdio.h>
+#include <stdbool.h>
 
-layout_t get_button_layout(size_t buttons_len)
+#include <GL/glut.h>
+
+#include <point.h>
+#include <global.h>
+#include <direction.h>
+
+#include <menu.h>
+
+layout_t _menu_get_button_layout(size_t buttons_len)
 {
 	layout_t layout;
 	
@@ -27,40 +36,40 @@ layout_t get_button_layout(size_t buttons_len)
 	}
 }
 
-void set_button_dimensions(double *button_width, double *button_height, layout_t layout)
+void menu_set_button_dimensions(double *button_width, double *button_height, layout_t layout)
 {
 	*button_width = 40.0 / layout.width;
 	*button_height = 25.0 / layout.height;
 }
 
-void set_start_values(double *x_start, double *y_start, layout_t layout, int loop_point)
+void menu_set_start_values(double *x_start, double *y_start, layout_t layout, int loop_point)
 {
 	double button_width;
 	double button_height;
-	set_button_dimensions(&button_width, &button_height, layout);
+	menu_set_button_dimensions(&button_width, &button_height, layout);
 	
 	*x_start = (double)window_width * ((-18.0 + ((double)(loop_point % (int)layout.width) * button_width)) / 1024.0);
 	*y_start = (double)window_height * ((9.0 - ((double)(loop_point / layout.height) * button_height)) / 768.0);
 }
 
-void draw_menu_buttons(button_t buttons[], size_t button_num)
+void menu_draw_buttons(button_t buttons[], size_t button_num)
 {
 	void *font = GLUT_BITMAP_9_BY_15;
 
-	layout_t layout = get_button_layout(button_num);
+	layout_t layout = _menu_get_button_layout(button_num);
 
 	if (layout.type == LAYOUT_TYPE_ERROR)
 		return;
 
 	double button_width;
 	double button_height;
-	set_button_dimensions(&button_width, &button_height, layout);
+	menu_set_button_dimensions(&button_width, &button_height, layout);
 
 	double x_start;
 	double y_start;
 
 	for (int i = 0; i < button_num; i++) {
-		set_start_values(&x_start, &y_start, layout, i);
+		menu_set_start_values(&x_start, &y_start, layout, i);
 
 		/* draw rectangle */
 		glColor3d(1.0, 1.0, 1.0);
@@ -92,7 +101,7 @@ void draw_menu_buttons(button_t buttons[], size_t button_num)
 	}
 }
 
-void draw_menu_text(char *name, char *description)
+void menu_draw_text(char *name, char *description)
 {
 	void *font = GLUT_BITMAP_9_BY_15;
 
@@ -113,9 +122,9 @@ void draw_menu_text(char *name, char *description)
 		glutBitmapCharacter(font, description[i]);
 }
 
-void select(direction_t direction, button_t *buttons[], size_t button_len)
+void menu_select(direction_t direction, button_t *buttons[], size_t button_len)
 {
-	layout_t layout = get_button_layout(button_len);
+	layout_t layout = _menu_get_button_layout(button_len);
 
 	if (layout.type == LAYOUT_TYPE_ERROR)
 		return;

@@ -1,4 +1,4 @@
-#include "grid.h"
+#include <grid.h>
 
 void draw_grid(grid_t grid)
 {
