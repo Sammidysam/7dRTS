@@ -222,7 +222,7 @@ void draw_screen()
 	glColor3d(1.0, 1.0, 1.0);
 
 	if (!on_menu) {
-		draw_grid();
+		grid_draw();
 	} else {
 		menu_draw_text(name, description);
 		menu_draw_buttons(buttons, LEN(buttons));

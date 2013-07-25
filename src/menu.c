@@ -134,32 +134,32 @@ void menu_select(direction_t direction, button_t *buttons[], size_t button_len)
 		if (buttons[i]->selected)
 			selected_button = i;
 
-	int selected_button_x = one_d_x(selected_button, layout.width, layout.height);
-	int selected_button_y = one_d_y(selected_button, layout.width, layout.height);
+	int selected_button_x = point_one_d_x(selected_button, layout.width, layout.height);
+	int selected_button_y = point_one_d_y(selected_button, layout.width, layout.height);
 
 	switch (direction) {
 	case DIRECTION_UP:
 		if (selected_button_y > 0) {
 			buttons[selected_button]->selected = false;
-			buttons[two_d_to_one_d(make_point(selected_button_x, selected_button_y - 1), layout.width, layout.height)]->selected = true;
+			buttons[point_two_d_to_one_d(point_new(selected_button_x, selected_button_y - 1), layout.width, layout.height)]->selected = true;
 		}
 		break;
 	case DIRECTION_DOWN:
 		if (selected_button_y < layout.height - 1) {
 			buttons[selected_button]->selected = false;
-			buttons[two_d_to_one_d(make_point(selected_button_x, selected_button_y + 1), layout.width, layout.height)]->selected = true;
+			buttons[point_two_d_to_one_d(point_new(selected_button_x, selected_button_y + 1), layout.width, layout.height)]->selected = true;
 		}
 		break;
 	case DIRECTION_LEFT:
 		if (selected_button_x > 0) {
 			buttons[selected_button]->selected = false;
-			buttons[two_d_to_one_d(make_point(selected_button_x - 1, selected_button_y), layout.width, layout.height)]->selected = true;
+			buttons[point_two_d_to_one_d(point_new(selected_button_x - 1, selected_button_y), layout.width, layout.height)]->selected = true;
 		}
 		break;
 	case DIRECTION_RIGHT:
 		if (selected_button_x < layout.width - 1) {
 			buttons[selected_button]->selected = false;
-			buttons[two_d_to_one_d(make_point(selected_button_x + 1, selected_button_y), layout.width, layout.height)]->selected = true;
+			buttons[point_two_d_to_one_d(point_new(selected_button_x + 1, selected_button_y), layout.width, layout.height)]->selected = true;
 		}
 		break;
 	}
