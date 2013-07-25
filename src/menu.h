@@ -6,9 +6,11 @@
 
 #include <GL/glut.h>
 
-#include "main.h"
+#include "global.h"
+#include "grid.h"
 
 #define BUTTON_GAP 1.0
+#define BORDER_WIDTH 7.0f
 
 typedef enum layout_type_t {
 	LAYOUT_TYPE_HORIZONTAL,
@@ -23,8 +25,7 @@ typedef enum layout_type_t {
 typedef struct layout_t {
 	layout_type_t type;
 	
-	int rows;
-	int columns;
+	grid_t layout_grid;
 } layout_t;
 
 typedef struct button_t {
@@ -33,7 +34,7 @@ typedef struct button_t {
 	bool selected;
 } button_t;
 
-layout_t get_button_layout(int button_num);
+layout_t get_button_layout(size_t buttons_len);
 void set_button_dimensions(double *button_width, double *button_height, layout_t layout);
 void set_start_values(double *x_start, double *y_start, layout_t layout, int loop_point);
 void draw_menu_buttons(button_t buttons[], int button_num);
