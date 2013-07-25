@@ -46,8 +46,7 @@ static struct gl_texture_t *_texture_read_png_from_file(const char *filename) {
 	// Open image file
 	fp = fopen(filename, "rb");
 	if(!fp) {
-		fprintf(stderr, "[PNGLD] could not open %s!\n", filename);
-		fprintf(stdout, "[PNGLD] could not open %s!\n", filename);
+		fprintf(stdout, "_texture_read_png_from_file: fopen failed on %s\n", filename);
 		return NULL;
 	}
 
@@ -56,8 +55,7 @@ static struct gl_texture_t *_texture_read_png_from_file(const char *filename) {
 
 	/* Check for valid magic number */
 	if(!png_check_sig(magic, sizeof(magic))) {
-		fprintf(stderr, "[PNGLD] %s is not a valid PNG image!\n", filename);
-		fprintf(stdout, "[PNGLD] %s is not a valid PNG image!\n", filename);
+		fprintf(stderr, "_texture_read_png_from_file: png_check_sig(%d, %d) did not work on %s, maybe not valid png file?\n", magic, sizeof(magic), filename);
 		fclose(fp);
 		return NULL;
 	}
@@ -169,7 +167,7 @@ static struct gl_texture_t *_texture_read_png_from_file(const char *filename) {
 	free(row_pointers);
 
 	fclose(fp);
-	fprintf(stdout, "[PNGLD] success, %s's texinfo = %s\n", filename, (char *)texinfo);
+	fprintf(stdout, "_texture_read_png_from_file: %s [ \033[32mOK\033[0m ]\n", filename);
 	return texinfo;
 }
 
@@ -177,8 +175,7 @@ GLuint _texture_load_png_texture(const char *filename) {
 	struct gl_texture_t *png_tex = NULL;
 	GLuint tex_id = 0;
 	GLint alignment;
-  
-	fprintf(stdout, "[PNGLD] reading file %s\n", filename);
+
 	png_tex = _texture_read_png_from_file(filename);
   
 	if(png_tex && png_tex->texels) {
