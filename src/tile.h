@@ -1,8 +1,8 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include "player.h"
 #include "texture.h"
+#include "player.h"
 
 typedef enum tile_type_t {
 	TILE_TYPE_GRASS,

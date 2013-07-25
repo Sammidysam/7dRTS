@@ -1,47 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <time.h>
-
-#include <png.h>
-#include <GL/glut.h>
-
-#include "texture.h"
-#include "player.h"
-#include "menu.h"
-
-#define KEY_CTRL_R 18
-#define KEY_CTRL_S 19
-#define KEY_CTRL_W 23
-#define KEY_ESCAPE 27
-
-#define DEFAULT_RENDER_DISTANCE 40.0
-
-#define UP 0
-#define DOWN 1
-#define LEFT 2
-#define RIGHT 3
+#include "main.h"
 
 // normally good is: false for development, true for release
 bool fullscreen = false;
 
-int window_width = 1024;
-int window_height = 768;
-
-int window_midw;
-int window_midh;
-
-double render_distance = 40.0;
-
-double grid_width = 8.0;
-double grid_height = 6.0;
-
 double zoom = 0.5;
 double move_speed = 0.3;
-
-double offset_x = 0.0;
-double offset_y = 0.0;
 
 bool key_down [256];
 
@@ -100,7 +63,7 @@ void handle_mouse(int button, int state, int x, int y)
 	}
 }
 
-void _set_window_mids(void)
+void _set_window_mids()
 {
 	window_midw = window_width / 2;
 	window_midh = window_height / 2;
@@ -166,49 +129,6 @@ void handle_resize(int w, int h)
 	gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
 }
 
-void select(int direction)
-{
-	layout_t layout = get_button_layout(sizeof(buttons) / sizeof(buttons[0]));
-
-	if (layout.type == LAYOUT_TYPE_ERROR)
-		return;
-
-	int selected_button;
-	for (int i = 0; i < sizeof(buttons) / sizeof(buttons[0]); i++)
-		if (buttons[i].selected)
-			selected_button = i;
-
-	int selected_button_x = selected_button % layout.rows;
-	int selected_button_y = selected_button / layout.columns;
-
-	switch (direction) {
-	case UP:
-		if (selected_button_y > 0) {
-			buttons[selected_button].selected = false;
-			buttons[(selected_button_y - 1) * layout.columns + selected_button_x].selected = true;
-		}
-		break;
-	case DOWN:
-		if (selected_button_y < layout.columns - 1) {
-			buttons[selected_button].selected = false;
-			buttons[(selected_button_y + 1) * layout.columns + selected_button_x].selected = true;
-		}
-		break;
-	case LEFT:
-		if (selected_button_x > 0) {
-			buttons[selected_button].selected = false;
-			buttons[selected_button_y * layout.columns + (selected_button_x - 1)].selected = true;
-		}
-		break;
-	case RIGHT:
-		if (selected_button_x < layout.rows - 1) {
-			buttons[selected_button].selected = false;
-			buttons[selected_button_y * layout.columns + (selected_button_x + 1)].selected = true;
-		}
-		break;
-	}
-}
-
 void update(int value)
 {
 	/* handle key presses */
@@ -224,28 +144,28 @@ void update(int value)
 				if (!on_menu)
 					offset_y -= move_speed;
 				else
-					select(UP);
+					select(DIRECTION_UP, &buttons, LEN(buttons));
 				break;
 		   case 'S': case 's':
 				/* move down */
 			   if (!on_menu)
 				   offset_y += move_speed;
 			   else
-				   select(DOWN);
+				   select(DIRECTION_DOWN, &buttons, LEN(buttons));
 			   break;
 			case 'A': case 'a':
 				/* move left */
 				if (!on_menu)
 					offset_x += move_speed;
 				else
-					select(LEFT);
+					select(DIRECTION_LEFT, &buttons, LEN(buttons));
 				break;
 			case 'D': case 'd':
 				/* move right */
 				if (!on_menu)
 					offset_x -= move_speed;
 				else
-					select(RIGHT);
+					select(DIRECTION_RIGHT, &buttons, LEN(buttons));
 				break;
 			case KEY_CTRL_W:
 				if (!on_menu)
@@ -259,31 +179,24 @@ void update(int value)
 				if (!on_menu)
 					render_distance = DEFAULT_RENDER_DISTANCE;
 				break;
+			case KEY_ENTER:
+				if (on_menu) {
+					int selected_button;
+					for (int i = 0; i < LEN(buttons); i++)
+						if (buttons[i].selected)
+							selected_button = i;
+					
+					// if (selected_button == 0) {
+					on_menu = false;
+					init_game();
+					// }
+				}
 			}
 		}
 	}
 	
 	glutPostRedisplay();
 	glutTimerFunc(16, update, 0);
-}
-
-void draw_grid()
-{
-	/* draw vertical lines */
-	for(double i = -(grid_width / 2.0) + offset_x; i <= (grid_width / 2.0) + offset_x; i += 1.0) {
-		glBegin(GL_LINES);
-		glVertex3d( i,	(grid_height / 2.0) + offset_y, -(render_distance));
-		glVertex3d( i, -(grid_height / 2.0) + offset_y, -(render_distance));
-		glEnd();
-	}
-
-	/* draw horizontal lines */
-	for(double i = -(grid_height / 2.0) + offset_y; i <= (grid_height / 2.0) + offset_y; i += 1.0) {
-		glBegin(GL_LINES);
-		glVertex3d( (grid_width / 2.0) + offset_x,	i, -(render_distance));
-		glVertex3d(-(grid_width / 2.0) + offset_x,	i, -(render_distance));
-		glEnd();
-	}
 }
 
 void draw_screen()
@@ -298,7 +211,7 @@ void draw_screen()
 		draw_grid();
 	} else {
 		draw_menu_text(name, description);
-		draw_menu_buttons(buttons, sizeof(buttons) / sizeof(buttons[0]));
+		draw_menu_buttons(buttons, LEN(buttons));
 	}
 	
 	glutSwapBuffers();

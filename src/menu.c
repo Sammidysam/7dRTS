@@ -1,26 +1,27 @@
 #include "menu.h"
 
-layout_t get_button_layout(int button_num)
+layout_t get_button_layout(size_t buttons_len)
 {
 	layout_t layout;
-	switch(button_num) {
+	
+	switch(buttons_len) {
 	case 2:
-		layout.rows = 1;
-		layout.columns = 1;
+		layout.width = 1;
+		layout.height = 1;
 		layout.type = LAYOUT_TYPE_HORIZONTAL;
 		return layout;
 	case 3:
-		layout.rows = 1;
-		layout.columns = 1;
+		layout.width = 1;
+		layout.height = 1;
 		layout.type = LAYOUT_TYPE_VERTICAL;
 		return layout;
 	case 4:
-		layout.rows = 2;
-		layout.columns = 2;
+		layout.width = 2;
+		layout.height = 2;
 		layout.type = LAYOUT_TYPE_GRID;
 		return layout;
 	default:
-		printf("Invalid button number %i!\n", button_num);
+		printf("Invalid button number %i!\n", buttons_len);
 		layout.type = LAYOUT_TYPE_ERROR;
 		return layout;
 	}
@@ -28,8 +29,8 @@ layout_t get_button_layout(int button_num)
 
 void set_button_dimensions(double *button_width, double *button_height, layout_t layout)
 {
-	*button_width = 40.0 / layout.rows;
-	*button_height = 25.0 / layout.columns;
+	*button_width = 40.0 / layout.width;
+	*button_height = 25.0 / layout.height;
 }
 
 void set_start_values(double *x_start, double *y_start, layout_t layout, int loop_point)
@@ -38,11 +39,11 @@ void set_start_values(double *x_start, double *y_start, layout_t layout, int loo
 	double button_height;
 	set_button_dimensions(&button_width, &button_height, layout);
 	
-	*x_start = (double)window_width * ((-18.0 + ((double)(loop_point % layout.rows) * button_width)) / 1024.0);
-	*y_start = (double)window_height * ((9.0 - ((double)(loop_point / layout.columns) * button_height)) / 768.0);
+	*x_start = (double)window_width * ((-18.0 + ((double)(loop_point % (int)layout.width) * button_width)) / 1024.0);
+	*y_start = (double)window_height * ((9.0 - ((double)(loop_point / layout.height) * button_height)) / 768.0);
 }
 
-void draw_menu_buttons(button_t buttons[], int button_num)
+void draw_menu_buttons(button_t buttons[], size_t button_num)
 {
 	void *font = GLUT_BITMAP_9_BY_15;
 
@@ -73,6 +74,7 @@ void draw_menu_buttons(button_t buttons[], int button_num)
 		/* draw red border around selected button */
 		if (buttons[i].selected) {
 			glColor3d(1.0, 0.0, 0.0);
+			glLineWidth(BORDER_WIDTH);
 			glBegin(GL_LINE_LOOP);
 			glVertex3d(x_start, y_start, -40.0);
 			glVertex3d(x_start, y_start - button_height + BUTTON_GAP, -40.0);
@@ -109,4 +111,47 @@ void draw_menu_text(char *name, char *description)
 
 	for (int i = 0; description[i] != '\0'; i++)
 		glutBitmapCharacter(font, description[i]);
+}
+
+void select(direction_t direction, button_t *buttons[], size_t button_len)
+{
+	layout_t layout = get_button_layout(button_len);
+
+	if (layout.type == LAYOUT_TYPE_ERROR)
+		return;
+
+	int selected_button;
+	for (int i = 0; i < button_len; i++)
+		if (buttons[i]->selected)
+			selected_button = i;
+
+	int selected_button_x = one_d_x(selected_button, layout.width, layout.height);
+	int selected_button_y = one_d_y(selected_button, layout.width, layout.height);
+
+	switch (direction) {
+	case DIRECTION_UP:
+		if (selected_button_y > 0) {
+			buttons[selected_button]->selected = false;
+			buttons[two_d_to_one_d(make_point(selected_button_x, selected_button_y - 1), layout.width, layout.height)]->selected = true;
+		}
+		break;
+	case DIRECTION_DOWN:
+		if (selected_button_y < layout.height - 1) {
+			buttons[selected_button]->selected = false;
+			buttons[two_d_to_one_d(make_point(selected_button_x, selected_button_y + 1), layout.width, layout.height)]->selected = true;
+		}
+		break;
+	case DIRECTION_LEFT:
+		if (selected_button_x > 0) {
+			buttons[selected_button]->selected = false;
+			buttons[two_d_to_one_d(make_point(selected_button_x - 1, selected_button_y), layout.width, layout.height)]->selected = true;
+		}
+		break;
+	case DIRECTION_RIGHT:
+		if (selected_button_x < layout.width - 1) {
+			buttons[selected_button]->selected = false;
+			buttons[two_d_to_one_d(make_point(selected_button_x + 1, selected_button_y), layout.width, layout.height)]->selected = true;
+		}
+		break;
+	}
 }
