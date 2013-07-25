@@ -73,15 +73,29 @@ void handle_mouse(int button, int state, int x, int y)
 	/* scroll wheel buttons */
 	/* the numbers (3, 4 below) should be in the config to be safe */
 	if (state != GLUT_UP) { 
-		switch (button) {
-		case 3:
-			if (!on_menu)
+		if (!on_menu) {
+			switch(button) {
+			case 3:
 				zoom_in();
-			break;
-		case 4:
-			if (!on_menu)
+				break;
+			case 4:
 				zoom_out();
-			break;
+				break;
+			default:
+				printf("handle_mouse: unsupported button\n");
+				break;
+			}
+		} else {
+			switch(button) {
+			case 3:
+				printf("handle_mouse: button=%d, state=%d, x=%d, y=%d, on menu, ignoring\n", button, state, x, y);
+				break;
+			case 4:
+				printf("handle_mouse: button=%d, state=%d, x=%d, y=%d, on menu, ignoring\n", button, state, x, y);
+				break;
+			default:
+				printf("handle_mouse: unsupported button\n");
+			}
 		}
 	}
 }
