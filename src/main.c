@@ -4,12 +4,12 @@
 #include <stdbool.h>
 #include <time.h>
 
+#include <png.h>
+#include <GL/glut.h>
+
 #include "texture.h"
 #include "player.h"
 #include "menu.h"
-
-#include <png.h>
-#include <GL/glut.h>
 
 #define KEY_CTRL_R 18
 #define KEY_CTRL_S 19
@@ -17,6 +17,11 @@
 #define KEY_ESCAPE 27
 
 #define DEFAULT_RENDER_DISTANCE 40.0
+
+#define UP 0
+#define DOWN 1
+#define LEFT 2
+#define RIGHT 3
 
 // normally good is: false for development, true for release
 bool fullscreen = false;
@@ -46,9 +51,10 @@ char *name = "7dRTS";
 char *description = "A submission for Mini Ludum Dare #44 7dRTS by Kristofer Rye (four04) and Sam Craig (Sammidysam)";
 char *new_game = "New Game";
 char *load_game = "Load Game";
+char *how_to_play = "How to Play";
 char *settings = "Settings";
 
-button_t buttons [3];
+button_t buttons [4];
 
 player_t *players;
 
@@ -63,10 +69,10 @@ void zoom_out()
 }
 
 void handle_mouse(int button, int state, int x, int y)
-{
+{ 
 	/* scroll wheel buttons */
 	/* the numbers (3, 4 below) should be in the config to be safe */
-	if (state != GLUT_UP) {
+	if (state != GLUT_UP) { 
 		switch (button) {
 		case 3:
 			if (!on_menu)
@@ -129,7 +135,10 @@ void init_buttons()
 {
 	buttons[0].text = new_game;
 	buttons[1].text = load_game;
-	buttons[2].text = settings;
+	buttons[2].text = how_to_play;
+	buttons[3].text = settings;
+
+	buttons[0].selected = true;
 }
 
 void handle_resize(int w, int h)
@@ -141,6 +150,49 @@ void handle_resize(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0);
+}
+
+void select(int direction)
+{
+	layout_t layout = get_button_layout(sizeof(buttons) / sizeof(buttons[0]));
+
+	if (layout.type == LAYOUT_TYPE_ERROR)
+		return;
+
+	int selected_button;
+	for (int i = 0; i < sizeof(buttons) / sizeof(buttons[0]); i++)
+		if (buttons[i].selected)
+			selected_button = i;
+
+	int selected_button_x = selected_button % layout.rows;
+	int selected_button_y = selected_button / layout.columns;
+
+	switch (direction) {
+	case UP:
+		if (selected_button_y > 0) {
+			buttons[selected_button].selected = false;
+			buttons[(selected_button_y - 1) * layout.columns + selected_button_x].selected = true;
+		}
+		break;
+	case DOWN:
+		if (selected_button_y < layout.columns - 1) {
+			buttons[selected_button].selected = false;
+			buttons[(selected_button_y + 1) * layout.columns + selected_button_x].selected = true;
+		}
+		break;
+	case LEFT:
+		if (selected_button_x > 0) {
+			buttons[selected_button].selected = false;
+			buttons[selected_button_y * layout.columns + (selected_button_x - 1)].selected = true;
+		}
+		break;
+	case RIGHT:
+		if (selected_button_x < layout.rows - 1) {
+			buttons[selected_button].selected = false;
+			buttons[selected_button_y * layout.columns + (selected_button_x + 1)].selected = true;
+		}
+		break;
+	}
 }
 
 void update(int value)
@@ -157,21 +209,29 @@ void update(int value)
 				/* move up */
 				if (!on_menu)
 					offset_y -= move_speed;
+				else
+					select(UP);
 				break;
 		   case 'S': case 's':
 				/* move down */
 			   if (!on_menu)
 				   offset_y += move_speed;
+			   else
+				   select(DOWN);
 			   break;
 			case 'A': case 'a':
 				/* move left */
 				if (!on_menu)
 					offset_x += move_speed;
+				else
+					select(LEFT);
 				break;
 			case 'D': case 'd':
 				/* move right */
 				if (!on_menu)
 					offset_x -= move_speed;
+				else
+					select(RIGHT);
 				break;
 			case KEY_CTRL_W:
 				if (!on_menu)
@@ -223,8 +283,8 @@ void draw_screen()
 	if (!on_menu) {
 		draw_grid();
 	} else {
-		draw_menu_text(name, description, window_width, window_height);
-		draw_menu_buttons(buttons, sizeof(buttons) / sizeof(buttons[0]), window_width, window_height);
+		draw_menu_text(name, description);
+		draw_menu_buttons(buttons, sizeof(buttons) / sizeof(buttons[0]));
 	}
 	
 	glutSwapBuffers();
