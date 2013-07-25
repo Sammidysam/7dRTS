@@ -7,13 +7,13 @@
 #include <png.h>
 #include <GL/glut.h>
 
-#include <global.h>
-#include <direction.h>
-#include <menu.h>
-#include <grid.h>
-#include <draw_mode.h>
+#include <src/global.h>
+#include <src/direction.h>
+#include <src/menu.h>
+#include <src/grid.h>
+#include <src/draw_mode.h>
 
-#include <main.h>
+#include <src/main.h>
 
 // normally good is: false for development, true for release
 bool fullscreen = false;
@@ -75,6 +75,7 @@ void handle_mouse(int button, int state, int x, int y)
 				break;
 			default:
 				printf("handle_mouse: unsupported button\n");
+				break;
 			}
 		}
 	}

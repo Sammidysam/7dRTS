@@ -1,10 +1,8 @@
-
-
 #include <GL/glut.h>
 
-#include <point.h>
-#include <global.h>
-#include <grid.h>
+#include <src/point.h>
+#include <src/global.h>
+#include <src/grid.h>
 
 void grid_draw(grid_t grid)
 {

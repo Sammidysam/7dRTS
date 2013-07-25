@@ -1,4 +1,4 @@
-#include "point.h"
+#include <src/point.h>
 
 point_t point_new(int x, int y)
 {

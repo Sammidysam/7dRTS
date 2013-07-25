@@ -1,7 +1,7 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include <tile.h>
+#include <src/tile.h>
 
 typedef struct grid_t {
 	int width;

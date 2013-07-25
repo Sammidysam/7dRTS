@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include <texture.h>
+#include <src/texture.h>
 
 #include <GL/glut.h>
 #include <png.h>

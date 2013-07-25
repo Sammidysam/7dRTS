@@ -3,7 +3,7 @@
 
 COMPILER=gcc
 
-FLAGS:=-lpng -lm -Isrc -lGL -lGLU -lglut -lSDL -ggdb -std=c11 
+FLAGS:=-lpng -lm -I. -lGL -lGLU -lglut -lSDL -ggdb -std=c11 
 
 COMPILEFLAGS=$(FLAGS) -fPIC
 LINKFLAGS=$(FLAGS)

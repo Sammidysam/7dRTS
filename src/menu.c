@@ -3,11 +3,11 @@
 
 #include <GL/glut.h>
 
-#include <point.h>
-#include <global.h>
-#include <direction.h>
+#include <src/point.h>
+#include <src/global.h>
+#include <src/direction.h>
 
-#include <menu.h>
+#include <src/menu.h>
 
 layout_t _menu_get_button_layout(size_t buttons_len)
 {

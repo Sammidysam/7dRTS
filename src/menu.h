@@ -1,6 +1,11 @@
 #ifndef MENU_H
 #define MENU_H
 
+#include <stdbool.h>
+#include <stdlib.h>
+
+#include <src/direction.h>
+
 #define BUTTON_GAP 1.0
 #define BORDER_WIDTH 7.0f
 
