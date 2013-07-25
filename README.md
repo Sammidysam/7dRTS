@@ -16,3 +16,4 @@ Current Priority List
 - Add how to play
 - Add saving and loading system
 - Add custom font
+- Improve everything
