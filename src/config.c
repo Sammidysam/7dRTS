@@ -14,7 +14,7 @@ void config_get_item_int(int *value, const char *path)
 	setting = config_lookup(&config, path);
 	
 	if (config_setting_type(setting) == CONFIG_TYPE_INT)
-		*value = config_setting_get_int(setting);
+		value[0] = config_setting_get_int(setting);
 
 	free(setting);
 }
@@ -27,7 +27,7 @@ void config_get_item_string(char **value, const char *path)
 
 	if (config_setting_type(setting) == CONFIG_TYPE_STRING) {
 		value[0] = (char *)malloc(strlen(config_setting_get_string(setting)) * sizeof(char));
-		strcpy(*value, config_setting_get_string(setting));
+		strcpy(value[0], config_setting_get_string(setting));
 	}
 
 	free(setting);
