@@ -24,9 +24,11 @@ void config_get_item_string(char **value, const char *path)
 	config_setting_t *setting = 0;
 
 	setting = config_lookup(&config, path);
-	
-	if (config_setting_type(setting) == CONFIG_TYPE_STRING)
-		*value = config_setting_get_string(setting);
+
+	if (config_setting_type(setting) == CONFIG_TYPE_STRING) {
+		value[0] = (char *)malloc(strlen(config_setting_get_string(setting)) * sizeof(char));
+		strcpy(*value, config_setting_get_string(setting));
+	}
 
 	free(setting);
 }
@@ -38,7 +40,7 @@ void config_get_item_bool(bool *value, const char *path)
 	setting = config_lookup(&config, path);
 	
 	if (config_setting_type(setting) == CONFIG_TYPE_BOOL)
-		*value = config_setting_get_bool(setting);
+		value[0] = config_setting_get_bool(setting);
 
 	free(setting);
 }
@@ -50,7 +52,7 @@ void config_get_item_double(double *value, const char *path)
 	setting = config_lookup(&config, path);
 	
 	if (config_setting_type(setting) == CONFIG_TYPE_FLOAT)
-		*value = config_setting_get_float(setting);
+		value[0] = config_setting_get_float(setting);
 
 	free(setting);
 }
