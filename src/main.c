@@ -129,18 +129,6 @@ void handle_key_down(unsigned char key, int x, int y)
 	key_down[key] = true;
 }
 
-void load_textures()
-{
-	grass_texture = _texture_load_png_texture("img/grass.png");
-	forest_texture = _texture_load_png_texture("img/tree/oak.png");
-	water_texture = _texture_load_png_texture("img/water.png");
-	stone_texture = _texture_load_png_texture("img/stone.png");
-	farm_texture = _texture_load_png_texture("img/farm.png");
-	castle_wall_texture = _texture_load_png_texture("img/castle/wall/straight.png");
-	castle_tower_texture = _texture_load_png_texture("img/castle/tower.png");
-	error_texture = _texture_load_png_texture("img/error.png");
-}
-
 void init_rendering()
 {
 	glShadeModel(GL_SMOOTH);

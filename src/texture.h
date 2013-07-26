@@ -18,6 +18,8 @@ static void _texture_get_png_texture_info(int color_type, struct gl_texture_t *t
 static struct gl_texture_t *_texture_read_png_from_file(const char *filename);
 GLuint _texture_load_png_texture(const char *filename);
 
+void load_textures();
+
 GLuint grass_texture;
 GLuint forest_texture;
 GLuint water_texture;
