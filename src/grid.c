@@ -26,8 +26,6 @@ void grid_draw(grid_t *grid)
 		glVertex3d(-(grid->width / 2.0) + offset_x,	i, -(render_distance));
 		glEnd();
 	}
-
-	printf("error_texture = 0x%x\n", error_texture);
 	
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, error_texture);
@@ -35,16 +33,16 @@ void grid_draw(grid_t *grid)
 		glBegin(GL_QUADS);
 		
 		glTexCoord2d( 0.0,  0.0);
-		glVertex3d(-(grid->width / 2.0), -(grid->height / 2.0), -(render_distance));
+		glVertex3d(-(grid->width / 2.0) + offset_x, -(grid->height / 2.0) + offset_y, -(render_distance));
 
 		glTexCoord2d( 1.0,  0.0);
-		glVertex3d( (grid->width / 2.0), -(grid->height / 2.0), -(render_distance));
+		glVertex3d( (grid->width / 2.0) + offset_x, -(grid->height / 2.0) + offset_y, -(render_distance));
 
 		glTexCoord2d( 1.0,  1.0);
-		glVertex3d( (grid->width / 2.0),  (grid->height / 2.0), -(render_distance));
+		glVertex3d( (grid->width / 2.0) + offset_x,  (grid->height / 2.0) + offset_y, -(render_distance));
 
 		glTexCoord2d( 0.0,  1.0);
-		glVertex3d(-(grid->width / 2.0),  (grid->height / 2.0), -(render_distance));
+		glVertex3d(-(grid->width / 2.0) + offset_x,  (grid->height / 2.0) + offset_y, -(render_distance));
 		
 		glEnd();
 	}
