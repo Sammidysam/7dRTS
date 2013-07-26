@@ -68,7 +68,7 @@ void config_get_item_int_list(int **list, int *length, const char *path)
 
 		*length = config_setting_length(setting);
 
-		*list = (int*)malloc(*length * sizeof(int));
+		*list = (int *)malloc(*length * sizeof(int));
 		for (int i = 0; i < *length; i++) {
 			char lookup_name [1024];
 

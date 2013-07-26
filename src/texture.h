@@ -28,5 +28,21 @@ GLuint farm_texture;
 GLuint castle_wall_texture;
 GLuint castle_tower_texture;
 GLuint error_texture;
+GLuint uninitialized_texture;
+
+GLuint arrow_texture;
+GLuint archer_still_texture;
+GLuint archer_left_texture;
+GLuint archer_right_texture;
+
+GLuint horseman_still_texture;
+
+GLuint knight_still_texture;
+
+GLuint swordsman_still_texture;
+GLuint swordsman_left_texture;
+GLuint swordsman_right_texture;
+
+GLuint trebuchet_still_texture;
 
 #endif

@@ -16,6 +16,7 @@
 #include <src/draw_mode.h>
 #include <src/config.h>
 #include <src/texture.h>
+#include <src/point.h>
 
 #include <src/main.h>
 
@@ -132,9 +133,20 @@ void init_game()
 	grid = grid_new();
 	grid->width = 8;
 	grid->height = 6;
+
+	grid_tiles = (tile_t *)malloc((grid->width * grid->height) * sizeof(tile_t));
+
+	/* set tiles as empty */
+	for (int i = 0; i < grid->width * grid->height; i++)
+		grid_tiles[i] = *tile_new_empty_int(i, grid->width, grid->height);
+
+	/* initialize board */
+	for (int i = 0; i < grid->width * grid->height; i++) {
+		
+	}
 	
 	/* this is to set the array of players in the game */
-	// players = (player_t*)malloc(players * sizeof(player_t));
+	// players = (player_t *)malloc(players * sizeof(player_t));
 }
 
 void init_buttons()
@@ -185,35 +197,40 @@ void update(int value)
 					offset_x -= move_speed;
 				else
 					menu_select(DIRECTION_RIGHT, &buttons, LEN(buttons));
-			} else if (i == zoom_in_key && draw_mode != DRAW_MODE_MENU) {
-				zoom_in();
-			} else if (i == zoom_out_key && draw_mode != DRAW_MODE_MENU) {
-				zoom_out();
-			} else if (i == reset_key && draw_mode != DRAW_MODE_MENU) {
-				render_distance = default_render_distance;
-			} else if (i == confirm_key && draw_mode == DRAW_MODE_MENU) {
-				int selected_button;
-				for (int i = 0; i < LEN(buttons); i++)
-					if (buttons[i].selected)
-						selected_button = i;
+			} else if (i == zoom_in_key) {
+				if (draw_mode != DRAW_MODE_MENU)
+					zoom_in();
+			} else if (i == zoom_out_key) {
+				if (draw_mode != DRAW_MODE_MENU)
+					zoom_out();
+			} else if (i == reset_key) {
+				if (draw_mode != DRAW_MODE_MENU)
+					render_distance = default_render_distance;
+			} else if (i == confirm_key) {
+				if (draw_mode == DRAW_MODE_MENU) {
+					int selected_button;
+					for (int i = 0; i < LEN(buttons); i++)
+						if (buttons[i].selected)
+							selected_button = i;
 
-				switch (selected_button) {
-				case 0:
-					init_game();
-					draw_mode = DRAW_MODE_IN_GAME;
-					break;
-				case 1:
-					draw_mode = DRAW_MODE_LOAD_GAME;
-					break;
-				case 2:
-					draw_mode = DRAW_MODE_HOW_TO_PLAY;
-					break;
-				case 3:
-					draw_mode = DRAW_MODE_SETTINGS;
-					break;
-				default:
-					draw_mode = DRAW_MODE_ERROR;
-					break;
+					switch (selected_button) {
+					case 0:
+						init_game();
+						draw_mode = DRAW_MODE_IN_GAME;
+						break;
+					case 1:
+						draw_mode = DRAW_MODE_LOAD_GAME;
+						break;
+					case 2:
+						draw_mode = DRAW_MODE_HOW_TO_PLAY;
+						break;
+					case 3:
+						draw_mode = DRAW_MODE_SETTINGS;
+						break;
+					default:
+						draw_mode = DRAW_MODE_ERROR;
+						break;
+					}
 				}
 			} else {
 				printf("Unsupported key %d pressed\n", i);
@@ -269,6 +286,9 @@ void clean_up()
 	free(how_to_play);
 	free(settings);
 
+	free(grid_tiles);
+	free(grid);
+
 	config_destroy(&config);
 }
 
@@ -278,12 +298,12 @@ int main(int argc, char *argv[])
 
 	/* initialize strings */
 	/* allocate memory */
-	name = (char*)malloc(1024 * sizeof(char));
-	description = (char*)malloc(1024 * sizeof(char));
-	new_game = (char*)malloc(1024 * sizeof(char));
-	load_game = (char*)malloc(1024 * sizeof(char));
-	how_to_play = (char*)malloc(1024 * sizeof(char));
-	settings = (char*)malloc(1024 * sizeof(char));
+	name = (char *)malloc(1024 * sizeof(char));
+	description = (char *)malloc(1024 * sizeof(char));
+	new_game = (char *)malloc(1024 * sizeof(char));
+	load_game = (char *)malloc(1024 * sizeof(char));
+	how_to_play = (char *)malloc(1024 * sizeof(char));
+	settings = (char *)malloc(1024 * sizeof(char));
 
 	/* assign values */
 	name = "7dRTS";

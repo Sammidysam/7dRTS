@@ -231,4 +231,20 @@ void load_textures()
 	castle_wall_texture = _texture_load_png_texture("img/castle/wall/straight.png");
 	castle_tower_texture = _texture_load_png_texture("img/castle/tower.png");
 	error_texture = _texture_load_png_texture("img/error.png");
+	uninitialized_texture = _texture_load_png_texture("img/uninitialized.png");
+
+	arrow_texture = _texture_load_png_texture("img/units/archer/arrow.png");
+	archer_still_texture = _texture_load_png_texture("img/units/archer/still.png");
+	archer_left_texture = _texture_load_png_texture("img/units/archer/left.png");
+	archer_right_texture = _texture_load_png_texture("img/units/archer/right.png");
+
+	horseman_still_texture = _texture_load_png_texture("img/units/horseman/still.png");
+
+	knight_still_texture = _texture_load_png_texture("img/units/knight/still.png");
+
+	swordsman_still_texture = _texture_load_png_texture("img/units/swordsman/still.png");
+	swordsman_left_texture = _texture_load_png_texture("img/units/swordsman/left.png");
+	swordsman_right_texture = _texture_load_png_texture("img/units/swordsman/right.png");
+
+	trebuchet_still_texture = _texture_load_png_texture("img/units/trebuchet/still.png");
 }

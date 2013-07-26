@@ -6,8 +6,6 @@
 typedef struct grid_t {
 	int width;
 	int height;
-
-	tile_t *tiles[];
 } grid_t;
 
 void grid_draw(grid_t *grid);
