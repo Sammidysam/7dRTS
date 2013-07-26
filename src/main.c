@@ -14,6 +14,7 @@
 #include <src/grid.h>
 #include <src/draw_mode.h>
 #include <src/config.h>
+#include <src/texture.h>
 
 #include <src/main.h>
 
@@ -71,7 +72,7 @@ int reset_render_distance_keys_len = 1;
 int *confirm_selection_keys;
 int confirm_selection_keys_len = 1;
 
-grid_t grid;
+grid_t *grid;
 
 player_t *players;
 
@@ -129,17 +130,6 @@ void handle_key_down(unsigned char key, int x, int y)
 	key_down[key] = true;
 }
 
-void load_textures()
-{
-	grass_texture = texture_new_from_filename("img/grass.png");
-	forest_texture = texture_new_from_filename("img/tree/oak.png");
-	water_texture = texture_new_from_filename("img/water.png");
-	stone_texture = texture_new_from_filename("img/stone.png");
-	farm_texture = texture_new_from_filename("img/farm.png");
-	castle_wall_texture = texture_new_from_filename("img/castle/wall/straight.png");
-	castle_tower_texture = texture_new_from_filename("img/castle/tower.png");
-}
-
 void init_rendering()
 {
 	glShadeModel(GL_SMOOTH);
@@ -155,8 +145,9 @@ void init_rendering()
 void init_game()
 {
 	/* init grid */
-	grid.width = 8;
-	grid.height = 6;
+	grid = grid_new();
+	grid->width = 8;
+	grid->height = 6;
 	
 	/* this is to set the array of players in the game */
 	// players = (player_t*)malloc(players * sizeof(player_t));

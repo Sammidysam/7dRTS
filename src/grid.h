@@ -10,6 +10,8 @@ typedef struct grid_t {
 	tile_t *tiles[];
 } grid_t;
 
-void grid_draw();
+void grid_draw(grid_t *grid);
+
+grid_t *grid_new();
 
 #endif

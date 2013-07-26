@@ -22,7 +22,7 @@ typedef struct tile_t {
 
 	int data;
 	
-	texture_t *texture;
+	GLuint texture;
 
 	player_t *owner;
 	

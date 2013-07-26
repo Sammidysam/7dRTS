@@ -221,20 +221,14 @@ GLuint _texture_load_png_texture(const char *filename) {
 	return tex_id;
 }
 
-texture_t *texture_new()
+void load_textures()
 {
-	texture_t *n = (texture_t *)malloc(sizeof(texture_t));
-
-	return n;
-}
-
-texture_t *texture_new_from_filename(char *filename)
-{
-	texture_t *n = texture_new();
-	texture_load(n, filename);
-}
-
-void texture_load(texture_t *texture, char *filename)
-{
-	texture->texture_id = _texture_load_png_texture(filename);
+	grass_texture = _texture_load_png_texture("img/grass.png");
+	forest_texture = _texture_load_png_texture("img/tree/oak.png");
+	water_texture = _texture_load_png_texture("img/water.png");
+	stone_texture = _texture_load_png_texture("img/stone.png");
+	farm_texture = _texture_load_png_texture("img/farm.png");
+	castle_wall_texture = _texture_load_png_texture("img/castle/wall/straight.png");
+	castle_tower_texture = _texture_load_png_texture("img/castle/tower.png");
+	error_texture = _texture_load_png_texture("img/error.png");
 }
