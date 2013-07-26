@@ -7,8 +7,6 @@
 #define KEY_CTRL_W 23
 #define KEY_ESCAPE 27
 
-#define DEFAULT_RENDER_DISTANCE 40.0
-
 void zoom_in();
 void zoom_out();
 void handle_mouse(int button, int state, int x, int y);

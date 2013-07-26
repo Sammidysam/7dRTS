@@ -1,6 +1,10 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
+#include <stdbool.h>
+
+#include <libconfig.h>
+
 #define LEN(x) (sizeof(x) / sizeof(x[0]))
 
 extern int window_width;
@@ -13,5 +17,8 @@ extern double render_distance;
 
 extern double offset_x;
 extern double offset_y;
+
+extern config_t config;
+extern bool has_config;
 
 #endif

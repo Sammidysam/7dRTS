@@ -10,3 +10,6 @@ double render_distance = 40.0;
 
 double offset_x = 0.0;
 double offset_y = 0.0;
+
+config_t config;
+bool has_config = true;
