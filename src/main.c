@@ -181,22 +181,22 @@ void update(int value)
 				if (draw_mode != DRAW_MODE_MENU)
 					offset_y -= move_speed;
 				else
-					menu_select(DIRECTION_UP, &buttons, LEN(buttons));
+					menu_select(DIRECTION_UP, buttons, LEN(buttons));
 			} else if (i == move_down_key) {
 				if (draw_mode != DRAW_MODE_MENU)
 					offset_y += move_speed;
 				else
-					menu_select(DIRECTION_DOWN, &buttons, LEN(buttons));
+					menu_select(DIRECTION_DOWN, buttons, LEN(buttons));
 			} else if (i == move_left_key) {
 				if (draw_mode != DRAW_MODE_MENU)
 					offset_x += move_speed;
 				else
-					menu_select(DIRECTION_LEFT, &buttons, LEN(buttons));
+					menu_select(DIRECTION_LEFT, buttons, LEN(buttons));
 			} else if (i == move_right_key) {
 				if (draw_mode != DRAW_MODE_MENU)
 					offset_x -= move_speed;
 				else
-					menu_select(DIRECTION_RIGHT, &buttons, LEN(buttons));
+					menu_select(DIRECTION_RIGHT, buttons, LEN(buttons));
 			} else if (i == zoom_in_key) {
 				if (draw_mode != DRAW_MODE_MENU)
 					zoom_in();

@@ -48,10 +48,10 @@ tile_t *tile_new_empty_int(int point, int grid_width, int grid_height)
 
 	_tile_populate_texture_from_type(n);
 
-	point_t location = point_one_d_to_two_d(point, grid_width, grid_height);
+	point_t *location = point_one_d_to_two_d(point, grid_width, grid_height);
 
-	n->location->x = location.x;
-	n->location->y = location.y;
+	n->location->x = location->x;
+	n->location->y = location->y;
 
 	return n;
 }
@@ -144,9 +144,9 @@ player_t *tile_get_owner(tile_t *tile)
 
 tile_t *tile_get_surrounding(tile_t *tile)
 {
-	tile_t surrounding [8];
+	tile_t *surrounding;
 
+	surrounding = (tile_t *)malloc(sizeof(surrounding) * 8);
 	
-
-	return &surrounding;
+	return surrounding;
 }
