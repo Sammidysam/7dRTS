@@ -220,21 +220,3 @@ GLuint _texture_load_png_texture(const char *filename) {
 	}
 	return tex_id;
 }
-
-texture_t *texture_new()
-{
-	texture_t *n = (texture_t *)malloc(sizeof(texture_t));
-
-	return n;
-}
-
-texture_t *texture_new_from_filename(char *filename)
-{
-	texture_t *n = texture_new();
-	texture_load(n, filename);
-}
-
-void texture_load(texture_t *texture, char *filename)
-{
-	texture->texture_id = _texture_load_png_texture(filename);
-}

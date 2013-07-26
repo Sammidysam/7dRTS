@@ -1,8 +1,6 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include <stdbool.h>
-
 #include <GL/gl.h>
 
 struct gl_texture_t {
@@ -16,26 +14,17 @@ struct gl_texture_t {
 	GLubyte *texels;
 };
 
-typedef struct texture_t {
-	GLuint texture_id;
-} texture_t;
-
 static void _texture_get_png_texture_info(int color_type, struct gl_texture_t *texinfo);
 static struct gl_texture_t *_texture_read_png_from_file(const char *filename);
 GLuint _texture_load_png_texture(const char *filename);
 
-texture_t *texture_new();
-texture_t *texture_new_from_filename(char *filename);
-
-void texture_load(texture_t *texture, char *filename);
-
-texture_t *grass_texture;
-texture_t *forest_texture;
-texture_t *water_texture;
-texture_t *stone_texture;
-texture_t *farm_texture;
-texture_t *castle_wall_texture;
-texture_t *castle_tower_texture;
-texture_t *error_texture;
+GLuint grass_texture;
+GLuint forest_texture;
+GLuint water_texture;
+GLuint stone_texture;
+GLuint farm_texture;
+GLuint castle_wall_texture;
+GLuint castle_tower_texture;
+GLuint error_texture;
 
 #endif
