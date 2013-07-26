@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <time.h>
+#include <ctype.h>
 
 #include <png.h>
 #include <GL/glut.h>
@@ -39,38 +40,17 @@ int default_select_button = 0;
 
 double default_render_distance = 40.0;
 
-int *mouse_zoom_in;
-int mouse_zoom_in_len = 1;
-
-int *mouse_zoom_out;
-int mouse_zoom_out_len = 1;
-
-int *quit_keys;
-int quit_keys_len = 1;
-
-int *move_up_keys;
-int move_up_keys_len = 2;
-
-int *move_down_keys;
-int move_down_keys_len = 2;
-
-int *move_left_keys;
-int move_left_keys_len = 2;
-
-int *move_right_keys;
-int move_right_keys_len = 2;
-
-int *zoom_in_keys;
-int zoom_in_keys_len = 1;
-
-int *zoom_out_keys;
-int zoom_out_keys_len = 1;
-
-int *reset_render_distance_keys;
-int reset_render_distance_keys_len = 1;
-
-int *confirm_selection_keys;
-int confirm_selection_keys_len = 1;
+int mouse_zoom_in = 3;
+int mouse_zoom_out = 4;
+int quit_key = KEY_ESCAPE;
+int move_up_key = 'w';
+int move_down_key = 's';
+int move_left_key = 'a';
+int move_right_key = 'd';
+int zoom_in_key = KEY_CTRL_W;
+int zoom_out_key = KEY_CTRL_S;
+int reset_key = KEY_CTRL_R;
+int confirm_key = KEY_ENTER;
 
 grid_t *grid;
 
@@ -93,14 +73,12 @@ void handle_mouse(int button, int state, int x, int y)
 	/* scroll wheel buttons */
 	if (state != GLUT_UP) { 
 		if (draw_mode != DRAW_MODE_MENU) {
-			for (int i = 0; i < mouse_zoom_in_len; i++) {
-				if (button == mouse_zoom_in[i])
-					zoom_in();
-			}
-			for (int i = 0; i < mouse_zoom_out_len; i++) {
-				if (button == mouse_zoom_out[i])
-					zoom_out();
-			}
+			if (button == mouse_zoom_in)
+				zoom_in();
+			else if (button == mouse_zoom_out)
+				zoom_out();
+			else
+				printf("Unsupported button %d pressed\n", button);
 		} else {
 			switch(button) {
 			case 3: case 4:
@@ -122,11 +100,17 @@ void _set_window_mids()
 
 void handle_key_up(unsigned char key, int x, int y)
 {
+	if (isupper(key))
+		key = tolower(key);
+	
 	key_down[key] = false;
 }
 
 void handle_key_down(unsigned char key, int x, int y)
 {
+	if (isupper(key))
+		key = tolower(key);
+	
 	key_down[key] = true;
 }
 
@@ -179,88 +163,60 @@ void update(int value)
 	/* handle key presses */
 	for (int i = 0; i < 256; i++) {
 		if (key_down[i]) {
-			for (int j = 0; j < quit_keys_len; j++) {
-				if (i == quit_keys[j])
-					exit(0);
-			}
+			if (i == quit_key) {
+				exit(0);
+			} else if (i == move_up_key) {
+				if (draw_mode != DRAW_MODE_MENU)
+					offset_y -= move_speed;
+				else
+					menu_select(DIRECTION_UP, &buttons, LEN(buttons));
+			} else if (i == move_down_key) {
+				if (draw_mode != DRAW_MODE_MENU)
+					offset_y += move_speed;
+				else
+					menu_select(DIRECTION_DOWN, &buttons, LEN(buttons));
+			} else if (i == move_left_key) {
+				if (draw_mode != DRAW_MODE_MENU)
+					offset_x += move_speed;
+				else
+					menu_select(DIRECTION_LEFT, &buttons, LEN(buttons));
+			} else if (i == move_right_key) {
+				if (draw_mode != DRAW_MODE_MENU)
+					offset_x -= move_speed;
+				else
+					menu_select(DIRECTION_RIGHT, &buttons, LEN(buttons));
+			} else if (i == zoom_in_key && draw_mode != DRAW_MODE_MENU) {
+				zoom_in();
+			} else if (i == zoom_out_key && draw_mode != DRAW_MODE_MENU) {
+				zoom_out();
+			} else if (i == reset_key && draw_mode != DRAW_MODE_MENU) {
+				render_distance = default_render_distance;
+			} else if (i == confirm_key && draw_mode == DRAW_MODE_MENU) {
+				int selected_button;
+				for (int i = 0; i < LEN(buttons); i++)
+					if (buttons[i].selected)
+						selected_button = i;
 
-			for (int j = 0; j < move_up_keys_len; j++) {
-				if (i == move_up_keys[j]) {
-					if (draw_mode != DRAW_MODE_MENU)
-						offset_y -= move_speed;
-					else
-						menu_select(DIRECTION_UP, &buttons, LEN(buttons));
+				switch (selected_button) {
+				case 0:
+					init_game();
+					draw_mode = DRAW_MODE_IN_GAME;
+					break;
+				case 1:
+					draw_mode = DRAW_MODE_LOAD_GAME;
+					break;
+				case 2:
+					draw_mode = DRAW_MODE_HOW_TO_PLAY;
+					break;
+				case 3:
+					draw_mode = DRAW_MODE_SETTINGS;
+					break;
+				default:
+					draw_mode = DRAW_MODE_ERROR;
+					break;
 				}
-			}
-
-			for (int j = 0; j < move_down_keys_len; j++) {
-				if (i == move_down_keys[j]) {
-					if (draw_mode != DRAW_MODE_MENU)
-						offset_y += move_speed;
-					else
-						menu_select(DIRECTION_DOWN, &buttons, LEN(buttons));
-				}
-			}
-
-			for (int j = 0; j < move_left_keys_len; j++) {
-				if (i == move_left_keys[j]) {
-					if (draw_mode != DRAW_MODE_MENU)
-						offset_x += move_speed;
-					else
-						menu_select(DIRECTION_LEFT, &buttons, LEN(buttons));
-				}
-			}
-
-			for (int j = 0; j < move_right_keys_len; j++) {
-				if (i == move_right_keys[j]) {
-					if (draw_mode != DRAW_MODE_MENU)
-						offset_x -= move_speed;
-					else
-						menu_select(DIRECTION_RIGHT, &buttons, LEN(buttons));
-				}
-			}
-
-			for (int j = 0; j < zoom_in_keys_len; j++) {
-				if (i == zoom_in_keys[j] && draw_mode != DRAW_MODE_MENU)
-					zoom_in();
-			}
-
-			for (int j = 0; j < zoom_out_keys_len; j++) {
-				if (i == zoom_out_keys[j] && draw_mode != DRAW_MODE_MENU)
-					zoom_out();
-			}
-
-			for (int j = 0; j < reset_render_distance_keys_len; j++) {
-				if (i == reset_render_distance_keys[j] && draw_mode != DRAW_MODE_MENU)
-					render_distance = default_render_distance;
-			}
-
-			for (int j = 0; j < confirm_selection_keys_len; j++) {
-				if (i == confirm_selection_keys[j] && draw_mode == DRAW_MODE_MENU) {
-					int selected_button;
-					for (int i = 0; i < LEN(buttons); i++)
-						if (buttons[i].selected)
-							selected_button = i;
-
-					switch (selected_button) {
-					case 0:
-						init_game();
-						draw_mode = DRAW_MODE_IN_GAME;
-						break;
-					case 1:
-						draw_mode = DRAW_MODE_LOAD_GAME;
-						break;
-					case 2:
-						draw_mode = DRAW_MODE_HOW_TO_PLAY;
-						break;
-					case 3:
-						draw_mode = DRAW_MODE_SETTINGS;
-						break;
-					default:
-						draw_mode = DRAW_MODE_ERROR;
-						break;
-					}
-				}
+			} else {
+				printf("Unsupported key %d pressed\n", i);
 			}
 		}
 	}
@@ -313,18 +269,6 @@ void clean_up()
 	free(how_to_play);
 	free(settings);
 
-	free(mouse_zoom_in);
-	free(mouse_zoom_out);
-	free(quit_keys);
-	free(move_up_keys);
-	free(move_down_keys);
-	free(move_left_keys);
-	free(move_right_keys);
-	free(zoom_in_keys);
-	free(zoom_out_keys);
-	free(reset_render_distance_keys);
-	free(confirm_selection_keys);
-
 	config_destroy(&config);
 }
 
@@ -348,44 +292,6 @@ int main(int argc, char *argv[])
 	load_game = "Load Game";
 	how_to_play = "How to Play";
 	settings = "Settings";
-
-	/* initialize other dynamic arrays */
-	mouse_zoom_in = (int*)malloc(mouse_zoom_in_len * sizeof(int));
-	mouse_zoom_in[0] = 3;
-
-	mouse_zoom_out = (int*)malloc(mouse_zoom_in_len * sizeof(int));
-	mouse_zoom_out[0] = 4;
-
-	quit_keys = (int*)malloc(quit_keys_len * sizeof(int));
-	quit_keys[0] = KEY_ESCAPE;
-
-	move_up_keys = (int*)malloc(move_up_keys_len * sizeof(int));
-	move_up_keys[0] = 'W';
-	move_up_keys[1] = 'w';
-
-	move_down_keys = (int*)malloc(move_down_keys_len * sizeof(int));
-	move_down_keys[0] = 'S';
-	move_down_keys[1] = 's';
-
-	move_left_keys = (int*)malloc(move_left_keys_len * sizeof(int));
-	move_left_keys[0] = 'A';
-	move_left_keys[1] = 'a';
-
-	move_right_keys = (int*)malloc(move_right_keys_len * sizeof(int));
-	move_right_keys[0] = 'D';
-	move_right_keys[1] = 'd';
-
-	zoom_in_keys = (int*)malloc(zoom_in_keys_len * sizeof(int));
-	zoom_in_keys[0] = KEY_CTRL_W;
-
-	zoom_out_keys = (int*)malloc(zoom_out_keys_len * sizeof(int));
-	zoom_out_keys[0] = KEY_CTRL_S;
-
-	reset_render_distance_keys = (int*)malloc(reset_render_distance_keys_len * sizeof(int));
-	reset_render_distance_keys[0] = KEY_CTRL_R;
-
-	confirm_selection_keys = (int*)malloc(confirm_selection_keys_len * sizeof(int));
-	confirm_selection_keys[0] = KEY_ENTER;
 
 	/* set up config */
 	config_init(&config);
@@ -431,17 +337,17 @@ int main(int argc, char *argv[])
 		config_get_item_double(&default_render_distance, "control_handling.default_render_distance");
 		printf("value parsed: %lf\n", default_render_distance);
 		render_distance = default_render_distance;
-		config_get_item_int_list(&mouse_zoom_in, &mouse_zoom_in_len, "control_handling.zoom_in_mouse");
-		config_get_item_int_list(&mouse_zoom_out, &mouse_zoom_out_len, "control_handling.zoom_out_mouse");
-		config_get_item_int_list(&quit_keys, &quit_keys_len, "control_handling.quit_keys");
-		config_get_item_int_list(&move_up_keys, &move_up_keys_len, "control_handling.move_up_keys");
-		config_get_item_int_list(&move_down_keys, &move_down_keys_len, "control_handling.move_down_keys");
-		config_get_item_int_list(&move_left_keys, &move_left_keys_len, "control_handling.move_left_keys");
-		config_get_item_int_list(&move_right_keys, &move_right_keys_len, "control_handling.move_right_keys");
-		config_get_item_int_list(&zoom_in_keys, &zoom_in_keys_len, "control_handling.zoom_in_keys");
-		config_get_item_int_list(&zoom_out_keys, &zoom_out_keys_len, "control_handling.zoom_out_keys");
-		config_get_item_int_list(&reset_render_distance_keys, &reset_render_distance_keys_len, "control_handling.reset_render_distance_keys");
-		config_get_item_int_list(&confirm_selection_keys, &confirm_selection_keys_len, "control_handling.confirm_selection_keys");
+		config_get_item_int(&mouse_zoom_in, "control_handling.zoom_in_mouse");
+		config_get_item_int(&mouse_zoom_out, "control_handling.zoom_out_mouse");
+		config_get_item_int(&quit_key, "control_handling.quit_keys");
+		config_get_item_int(&move_up_key, "control_handling.move_up_keys");
+		config_get_item_int(&move_down_key, "control_handling.move_down_keys");
+		config_get_item_int(&move_left_key, "control_handling.move_left_keys");
+		config_get_item_int(&move_right_key, "control_handling.move_right_keys");
+		config_get_item_int(&zoom_in_key, "control_handling.zoom_in_keys");
+		config_get_item_int(&zoom_out_key, "control_handling.zoom_out_keys");
+		config_get_item_int(&reset_key,"control_handling.reset_render_distance_keys");
+		config_get_item_int(&confirm_key, "control_handling.confirm_selection_keys");
 	}
 	
 	glutInit(&argc, argv);
