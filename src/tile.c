@@ -73,12 +73,11 @@ player_t *tile_get_owner(tile_t *tile)
 	return tile->owner;
 }
 
-void tile_set_next(tile_t *tile, tile_t *next)
+tile_t *tile_get_surrounding(tile_t *tile)
 {
-	tile->next = next;
-}
+	tile_t surrounding [8];
 
-tile_t *tile_get_next(tile_t *tile)
-{
-	return tile->next;
+	
+
+	return &surrounding;
 }

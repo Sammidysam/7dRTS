@@ -5,6 +5,8 @@
 
 #include <libconfig.h>
 
+#include <src/tile.h>
+
 #define LEN(x) (sizeof(x) / sizeof(x[0]))
 
 extern int window_width;
@@ -20,5 +22,7 @@ extern double offset_y;
 
 extern config_t config;
 extern bool has_config;
+
+extern tile_t *grid_tiles;
 
 #endif

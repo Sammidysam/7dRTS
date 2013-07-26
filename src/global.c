@@ -13,3 +13,5 @@ double offset_y = 0.0;
 
 config_t config;
 bool has_config = true;
+
+tile_t *grid_tiles;
