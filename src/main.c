@@ -387,6 +387,7 @@ int main(int argc, char *argv[])
 		glutFullScreen();
 
 	init_rendering();
+
 	if (draw_mode != DRAW_MODE_MENU)
 		init_game();
 	else
