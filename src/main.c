@@ -403,20 +403,33 @@ int main(int argc, char *argv[])
 	} else {
 		/* load all settings */
 		config_get_item_string(&name, "window.title");
+		printf("value parsed: %s\n", name);
 		config_get_item_int(&window_width, "window.size.width");
+		printf("value parsed: %d\n", window_width);
 		config_get_item_int(&window_height, "window.size.height");
+		printf("value parsed: %d\n", window_height);
 		config_get_item_bool(&fullscreen, "window.fullscreen");
+		printf("value parsed: %s\n", (fullscreen ? "fullscreen" : "!fullscreen"));
 		
 		config_get_item_string(&description, "menu.game_description");
+		printf("value parsed: %s\n", description);
 		config_get_item_string(&new_game, "menu.new_game_text");
+		printf("value parsed: %s\n", new_game);
 		config_get_item_string(&load_game, "menu.load_game_text");
+		printf("value parsed: %s\n", load_game);
 		config_get_item_string(&how_to_play, "menu.how_to_play_text");
+		printf("value parsed: %s\n", how_to_play);
 		config_get_item_string(&settings, "menu.settings_text");
+		printf("value parsed: %s\n", settings);
 		config_get_item_int(&default_select_button, "menu.default_selected_button");
-		
+		printf("value parsed: %d\n", default_select_button);
+				
 		config_get_item_double(&zoom, "control_handling.zoom_modifier");
+		printf("value parsed: %lf\n", zoom);
 		config_get_item_double(&move_speed, "control_handling.move_speed");
+		printf("value parsed: %lf\n", move_speed);
 		config_get_item_double(&default_render_distance, "control_handling.default_render_distance");
+		printf("value parsed: %lf\n", default_render_distance);
 		render_distance = default_render_distance;
 		config_get_item_int_list(&mouse_zoom_in, &mouse_zoom_in_len, "control_handling.zoom_in_mouse");
 		config_get_item_int_list(&mouse_zoom_out, &mouse_zoom_out_len, "control_handling.zoom_out_mouse");
