@@ -267,7 +267,8 @@ void draw_screen()
 	case DRAW_MODE_SETTINGS:
 		/* implement */
 		break;
-	case DRAW_MODE_ERROR: default:
+	case DRAW_MODE_ERROR:
+	default:
 		/* draw error texture or something */
 		break;
 	}
