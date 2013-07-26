@@ -13,6 +13,7 @@
 #include <src/menu.h>
 #include <src/grid.h>
 #include <src/draw_mode.h>
+#include <src/config.h>
 
 #include <src/main.h>
 
@@ -314,6 +315,25 @@ void clean_up()
 {
 	free(players);
 
+	free(name);
+	free(description);
+	free(new_game);
+	free(load_game);
+	free(how_to_play);
+	free(settings);
+
+	free(mouse_zoom_in);
+	free(mouse_zoom_out);
+	free(quit_keys);
+	free(move_up_keys);
+	free(move_down_keys);
+	free(move_left_keys);
+	free(move_right_keys);
+	free(zoom_in_keys);
+	free(zoom_out_keys);
+	free(reset_render_distance_keys);
+	free(confirm_selection_keys);
+
 	config_destroy(&config);
 }
 
@@ -390,312 +410,34 @@ int main(int argc, char *argv[])
 
 		/* if extra time, add generation of file */
 	} else {
-		config_setting_t *current_setting = 0;
-
-		current_setting = config_lookup(&config, "window.title");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-			name = config_setting_get_string(current_setting);
-
-		current_setting = config_lookup(&config, "window.size.width");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_INT)
-			window_width = config_setting_get_int(current_setting);
-
-		current_setting = config_lookup(&config, "window.size.height");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_INT)
-			window_height = config_setting_get_int(current_setting);
-
-		current_setting = config_lookup(&config, "window.fullscreen");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_BOOL)
-			fullscreen = config_setting_get_bool(current_setting);
-
-		current_setting = config_lookup(&config, "menu.game_description");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-			description = config_setting_get_string(current_setting);
-
-		current_setting = config_lookup(&config, "menu.new_game_text");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-			new_game = config_setting_get_string(current_setting);
-
-		current_setting = config_lookup(&config, "menu.load_game_text");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-			load_game = config_setting_get_string(current_setting);
-
-		current_setting = config_lookup(&config, "menu.how_to_play_text");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-			how_to_play = config_setting_get_string(current_setting);
-
-		current_setting = config_lookup(&config, "menu.settings_text");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-			settings = config_setting_get_string(current_setting);
-
-		current_setting = config_lookup(&config, "menu.default_selected_button");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_INT)
-			default_select_button = config_setting_get_int(current_setting);
-
-		current_setting = config_lookup(&config, "control_handling.zoom_modifier");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_FLOAT)
-			zoom = config_setting_get_float(current_setting);
-
-		current_setting = config_lookup(&config, "control_handling.move_speed");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_FLOAT)
-			move_speed = config_setting_get_float(current_setting);
-
-		current_setting = config_lookup(&config, "control_handling.default_render_distance");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_FLOAT) {
-			default_render_distance = config_setting_get_float(current_setting);
-			render_distance = config_setting_get_float(current_setting);
-		}
-
-		current_setting = config_lookup(&config, "control_handling.zoom_in_mouse");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_LIST) {
-			free(mouse_zoom_in);
-			
-			mouse_zoom_in_len = config_setting_length(current_setting);
-
-			mouse_zoom_in = (int*)malloc(mouse_zoom_in_len * sizeof(int));
-			for (int i = 0; i < mouse_zoom_in_len; i++) {
-				char lookup_name [1024];
-
-				sprintf(lookup_name, "control_handling.zoom_in_mouse.[%i]", i);
-				
-				current_setting = config_lookup(&config, lookup_name);
-
-				if (config_setting_type(current_setting) == CONFIG_TYPE_INT)
-					mouse_zoom_in[i] = config_setting_get_int(current_setting);
-			}
-		}
-
-		current_setting = config_lookup(&config, "control_handling.zoom_out_mouse");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_LIST) {
-			free(mouse_zoom_out);
-			
-			mouse_zoom_out_len = config_setting_length(current_setting);
-
-			mouse_zoom_out = (int*)malloc(mouse_zoom_out_len * sizeof(int));
-			for (int i = 0; i < mouse_zoom_out_len; i++) {
-				char lookup_name [1024];
-
-				sprintf(lookup_name, "control_handling.zoom_out_mouse.[%i]", i);
-				
-				current_setting = config_lookup(&config, lookup_name);
-
-				if (config_setting_type(current_setting) == CONFIG_TYPE_INT)
-					mouse_zoom_out[i] = config_setting_get_int(current_setting);
-			}
-		}
-
-		current_setting = config_lookup(&config, "control_handling.quit_keys");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_LIST) {
-			free(quit_keys);
-			
-			quit_keys_len = config_setting_length(current_setting);
-
-			quit_keys = (int*)malloc(quit_keys_len * sizeof(int));
-			for (int i = 0; i < quit_keys_len; i++) {
-				char lookup_name [1024];
-
-				sprintf(lookup_name, "control_handling.quit_keys.[%i]", i);
-				
-				current_setting = config_lookup(&config, lookup_name);
-
-				if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-					quit_keys[i] = config_setting_get_string(current_setting)[0];
-				else if (config_setting_type(current_setting) == CONFIG_TYPE_INT)
-					quit_keys[i] = config_setting_get_int(current_setting);
-			}
-		}
-
-		current_setting = config_lookup(&config, "control_handling.move_up_keys");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_LIST) {
-			free(move_up_keys);
-			
-			move_up_keys_len = config_setting_length(current_setting);
-
-			move_up_keys = (int*)malloc(move_up_keys_len * sizeof(int));
-			for (int i = 0; i < move_up_keys_len; i++) {
-				char lookup_name [1024];
-
-				sprintf(lookup_name, "control_handling.move_up_keys.[%i]", i);
-				
-				current_setting = config_lookup(&config, lookup_name);
-
-				if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-					move_up_keys[i] = config_setting_get_string(current_setting)[0];
-				else if (config_setting_type(current_setting) == CONFIG_TYPE_INT)
-					move_up_keys[i] = config_setting_get_int(current_setting);
-			}
-		}
-
-		current_setting = config_lookup(&config, "control_handling.move_down_keys");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_LIST) {
-			free(move_down_keys);
-			
-			move_down_keys_len = config_setting_length(current_setting);
-
-			move_down_keys = (int*)malloc(move_down_keys_len * sizeof(int));
-			for (int i = 0; i < move_down_keys_len; i++) {
-				char lookup_name [1024];
-
-				sprintf(lookup_name, "control_handling.move_down_keys.[%i]", i);
-				
-				current_setting = config_lookup(&config, lookup_name);
-
-				if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-					move_down_keys[i] = config_setting_get_string(current_setting)[0];
-				else if (config_setting_type(current_setting) == CONFIG_TYPE_INT)
-					move_down_keys[i] = config_setting_get_int(current_setting);
-			}
-		}
-
-		current_setting = config_lookup(&config, "control_handling.move_left_keys");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_LIST) {
-			free(move_left_keys);
-			
-			move_left_keys_len = config_setting_length(current_setting);
-
-			move_left_keys = (int*)malloc(move_left_keys_len * sizeof(int));
-			for (int i = 0; i < move_left_keys_len; i++) {
-				char lookup_name [1024];
-
-				sprintf(lookup_name, "control_handling.move_left_keys.[%i]", i);
-				
-				current_setting = config_lookup(&config, lookup_name);
-
-				if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-					move_left_keys[i] = config_setting_get_string(current_setting)[0];
-				else if (config_setting_type(current_setting) == CONFIG_TYPE_INT)
-					move_left_keys[i] = config_setting_get_int(current_setting);
-			}
-		}
-
-		current_setting = config_lookup(&config, "control_handling.move_right_keys");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_LIST) {
-			free(move_right_keys);
-			
-			move_right_keys_len = config_setting_length(current_setting);
-
-			move_right_keys = (int*)malloc(move_right_keys_len * sizeof(int));
-			for (int i = 0; i < move_right_keys_len; i++) {
-				char lookup_name [1024];
-
-				sprintf(lookup_name, "control_handling.move_right_keys.[%i]", i);
-				
-				current_setting = config_lookup(&config, lookup_name);
-
-				if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-					move_right_keys[i] = config_setting_get_string(current_setting)[0];
-				else if (config_setting_type(current_setting) == CONFIG_TYPE_INT)
-					move_right_keys[i] = config_setting_get_int(current_setting);
-			}
-		}
-
-		current_setting = config_lookup(&config, "control_handling.zoom_in_keys");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_LIST) {
-			free(zoom_in_keys);
-			
-			zoom_in_keys_len = config_setting_length(current_setting);
-
-			zoom_in_keys = (int*)malloc(zoom_in_keys_len * sizeof(int));
-			for (int i = 0; i < zoom_in_keys_len; i++) {
-				char lookup_name [1024];
-
-				sprintf(lookup_name, "control_handling.zoom_in_keys.[%i]", i);
-				
-				current_setting = config_lookup(&config, lookup_name);
-
-				if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-					zoom_in_keys[i] = config_setting_get_string(current_setting)[0];
-				else if (config_setting_type(current_setting) == CONFIG_TYPE_INT)
-					zoom_in_keys[i] = config_setting_get_int(current_setting);
-			}
-		}
-
-		current_setting = config_lookup(&config, "control_handling.zoom_out_keys");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_LIST) {
-			free(zoom_out_keys);
-			
-			zoom_out_keys_len = config_setting_length(current_setting);
-
-			zoom_out_keys = (int*)malloc(zoom_out_keys_len * sizeof(int));
-			for (int i = 0; i < zoom_out_keys_len; i++) {
-				char lookup_name [1024];
-
-				sprintf(lookup_name, "control_handling.zoom_out_keys.[%i]", i);
-				
-				current_setting = config_lookup(&config, lookup_name);
-
-				if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-					zoom_out_keys[i] = config_setting_get_string(current_setting)[0];
-				else if (config_setting_type(current_setting) == CONFIG_TYPE_INT)
-					zoom_out_keys[i] = config_setting_get_int(current_setting);
-			}
-		}
-
-		current_setting = config_lookup(&config, "control_handling.reset_render_distance_keys");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_LIST) {
-			free(reset_render_distance_keys);
-			
-			reset_render_distance_keys_len = config_setting_length(current_setting);
-
-			reset_render_distance_keys = (int*)malloc(reset_render_distance_keys_len * sizeof(int));
-			for (int i = 0; i < reset_render_distance_keys_len; i++) {
-				char lookup_name [1024];
-
-				sprintf(lookup_name, "control_handling.reset_render_distance_keys.[%i]", i);
-				
-				current_setting = config_lookup(&config, lookup_name);
-
-				if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-					reset_render_distance_keys[i] = config_setting_get_string(current_setting)[0];
-				else if (config_setting_type(current_setting) == CONFIG_TYPE_INT)
-					reset_render_distance_keys[i] = config_setting_get_int(current_setting);
-			}
-		}
-
-		current_setting = config_lookup(&config, "control_handling.confirm_selection_keys");
-
-		if (config_setting_type(current_setting) == CONFIG_TYPE_LIST) {
-			free(confirm_selection_keys);
-			
-			confirm_selection_keys_len = config_setting_length(current_setting);
-
-			confirm_selection_keys = (int*)malloc(confirm_selection_keys_len * sizeof(int));
-			for (int i = 0; i < confirm_selection_keys_len; i++) {
-				char lookup_name [1024];
-
-				sprintf(lookup_name, "control_handling.confirm_selection_keys.[%i]", i);
-				
-				current_setting = config_lookup(&config, lookup_name);
-
-				if (config_setting_type(current_setting) == CONFIG_TYPE_STRING)
-					confirm_selection_keys[i] = config_setting_get_string(current_setting)[0];
-				else if (config_setting_type(current_setting) == CONFIG_TYPE_INT)
-					confirm_selection_keys[i] = config_setting_get_int(current_setting);
-			}
-		}
+		/* load all settings */
+		config_get_item_string(&name, "window.title");
+		config_get_item_int(&window_width, "window.size.width");
+		config_get_item_int(&window_height, "window.size.height");
+		config_get_item_bool(&fullscreen, "window.fullscreen");
+		
+		config_get_item_string(&description, "menu.game_description");
+		config_get_item_string(&new_game, "menu.new_game_text");
+		config_get_item_string(&load_game, "menu.load_game_text");
+		config_get_item_string(&how_to_play, "menu.how_to_play_text");
+		config_get_item_string(&settings, "menu.settings_text");
+		config_get_item_int(&default_select_button, "menu.default_selected_button");
+		
+		config_get_item_double(&zoom, "control_handling.zoom_modifier");
+		config_get_item_double(&move_speed, "control_handling.move_speed");
+		config_get_item_double(&default_render_distance, "control_handling.default_render_distance");
+		render_distance = default_render_distance;
+		config_get_item_int_list(&mouse_zoom_in, &mouse_zoom_in_len, "control_handling.zoom_in_mouse");
+		config_get_item_int_list(&mouse_zoom_out, &mouse_zoom_out_len, "control_handling.zoom_out_mouse");
+		config_get_item_int_list(&quit_keys, &quit_keys_len, "control_handling.quit_keys");
+		config_get_item_int_list(&move_up_keys, &move_up_keys_len, "control_handling.move_up_keys");
+		config_get_item_int_list(&move_down_keys, &move_down_keys_len, "control_handling.move_down_keys");
+		config_get_item_int_list(&move_left_keys, &move_left_keys_len, "control_handling.move_left_keys");
+		config_get_item_int_list(&move_right_keys, &move_right_keys_len, "control_handling.move_right_keys");
+		config_get_item_int_list(&zoom_in_keys, &zoom_in_keys_len, "control_handling.zoom_in_keys");
+		config_get_item_int_list(&zoom_out_keys, &zoom_out_keys_len, "control_handling.zoom_out_keys");
+		config_get_item_int_list(&reset_render_distance_keys, &reset_render_distance_keys_len, "control_handling.reset_render_distance_keys");
+		config_get_item_int_list(&confirm_selection_keys, &confirm_selection_keys_len, "control_handling.confirm_selection_keys");
 	}
 	
 	glutInit(&argc, argv);
