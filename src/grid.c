@@ -26,10 +26,12 @@ void grid_draw(grid_t *grid)
 		glVertex3d(-(grid->width / 2.0) + offset_x,	i, -(render_distance));
 		glEnd();
 	}
-	
-	for(int i = 0; i < grid_tiles_len; i += 1) {
+
+	glEnable(GL_TEXTURE_2D);
+	for(int i = 0; i < grid_tiles_len; i++) {
 		grid_tile_draw(grid, &grid_tiles[i], (render_distance));
 	}
+	glDisable(GL_TEXTURE_2D);
 }
 
 grid_t *grid_new()
@@ -40,17 +42,16 @@ grid_t *grid_new()
 }
 
 void grid_tile_draw(grid_t *grid, tile_t *tile, double r)
-{
+{ 
 	double osx = (offset_x + -(grid->width / 2.0));
 	double osy = (offset_y + -(grid->height / 2.0));
 
 	double minx = (osx + tile->location->x);
 	double miny = (osy + tile->location->y);
 
-	double maxx = (osx + tile->location->x + 1.0);
-	double maxy = (osy + tile->location->y + 1.0);
-
-	glEnable(GL_TEXTURE_2D);
+	double maxx = (minx + 1.0);
+	double maxy = (miny + 1.0);
+	
 	glBindTexture(GL_TEXTURE_2D, tile->texture);
 	{
 		glBegin(GL_QUADS);
@@ -69,5 +70,4 @@ void grid_tile_draw(grid_t *grid, tile_t *tile, double r)
 		
 		glEnd();
 	}
-	glDisable(GL_TEXTURE_2D);
 }

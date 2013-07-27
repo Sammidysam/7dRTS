@@ -131,7 +131,7 @@ void init_game()
 {
 	/* init grid */
 	grid = grid_new();
-	grid->width = 8;
+	grid->width = 6;
 	grid->height = 6;
 
 	grid_tiles_len = grid->width * grid->height;
@@ -144,22 +144,13 @@ void init_game()
 	/* initialize board */
 	initialize_board(grid->width, grid->height);
 
-	for (int i = 0; i < grid_tiles_len; i++)
-		printf("tile %d has type %s\n", i,
-		       (grid_tiles[i].type == TILE_TYPE_UNINITIALIZED ? "uninitialized" :
-		        (grid_tiles[i].type == TILE_TYPE_GRASS ? "grass" :
-		         (grid_tiles[i].type == TILE_TYPE_FOREST ? "forest" :
-		          (grid_tiles[i].type == TILE_TYPE_WATER ? "water" :
-		           (grid_tiles[i].type == TILE_TYPE_STONE ? "stone" :
-		            (grid_tiles[i].type == TILE_TYPE_FARM ? "farm" :
-		             (grid_tiles[i].type == TILE_TYPE_CASTLE_WALL ? "castle wall" :
-		              (grid_tiles[i].type == TILE_TYPE_CASTLE_TOWER ? "castle tower" :
-		               (grid_tiles[i].type == TILE_TYPE_FAKE ? "fake" : "unknown"))))))))));
-	
-	/* this is to set the array of players in the game */
-	// players = (player_t *)malloc(players * sizeof(player_t));
-	for(int i = 0; i < grid->height; i += 1) {
-		for(int j = 0; j < grid->width; j += 1) {
+	printf("drawing grid...\n");
+	printf("\t,=grass\n");
+	printf("\tT=forest\n");
+	printf("\t~=water\n");
+	printf("\t@=stone\n");
+	for(int i = 0; i < grid->height; i++) {
+		for(int j = 0; j < grid->width; j++) {
 			char d;
 			switch(grid_tiles[(i * grid->width) + j].type) {
 			case TILE_TYPE_UNINITIALIZED: d = ' '; break;
@@ -177,6 +168,9 @@ void init_game()
 		}
 		putchar('\n');
 	}
+	
+	/* this is to set the array of players in the game */
+	// players = (player_t *)malloc(players * sizeof(player_t));
 }
 
 void init_buttons()

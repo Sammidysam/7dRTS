@@ -50,10 +50,8 @@ tile_t *tile_new_empty_int(int point, int grid_width, int grid_height)
 
 	_tile_populate_texture_from_type(n);
 
-	point_t *location = point_one_d_to_two_d(point, grid_width, grid_height);
-
-	n->location->x = location->x;
-	n->location->y = location->y;
+	n->location->x = point_one_d_x(point, grid_width, grid_height);
+	n->location->y = point_one_d_y(point, grid_width, grid_height);
 
 	return n;
 }
@@ -200,28 +198,31 @@ tile_t *tile_get_surrounding(tile_t *tile)
 		if (i == TILE_DIRECTION_MAX)
 			break;
 		
-		point_t location = *point_add(tile_direction_add(i), tile->location);
+		point_t *location = point_add(tile_direction_add(i), tile->location);
 
 		bool set_value = false;
 		
 		/* find if any tiles match location */
 		for (int j = 0; j < grid_tiles_len; j++) {
-			if (point_equals(grid_tiles[j].location, &location)) {
+			if (point_equals(grid_tiles[j].location, location)) {
 				surrounding[i] = grid_tiles[j];
 				set_value = true;
+				break;
 			}
 		}
 
 		if (!set_value)
 			surrounding[i] = *tile_new_from_type_point(TILE_TYPE_FAKE, &location);
+
+		free(location);
 	}
 	
 	return surrounding;
 }
 
 void initialize_board(int grid_width, int grid_height)
-{
-	for (int i = 0; i < grid_tiles_len; i++) { 
+{ 
+	for (int i = 0; i < grid_tiles_len; i++) {
 		tile_t *surrounding = tile_get_surrounding(&grid_tiles[i]);
 
 		int real_initialized_tiles = 0;
@@ -265,7 +266,7 @@ void initialize_board(int grid_width, int grid_height)
 				for (int j = 0; j < 8; j++) {
 					if (surrounding[j].type == TILE_TYPE_WATER) {
 						for (int k = 0; k < 4; k++) {
-							int index = point_two_d_to_one_d(point_add(surrounding[j].location, tile_direction_add(i)), grid_width, grid_height);
+							int index = point_two_d_to_one_d(point_add(surrounding[j].location, tile_direction_add(k)), grid_width, grid_height);
 
 							/* we don't want a lake of 3 straight tiles, that's ugly and river-like */
 							if (grid_tiles[index].type == TILE_TYPE_WATER && tile_direction_from_point(point_subtract(grid_tiles[index].location, surrounding[j].location)) != tile_direction_from_point(point_subtract(surrounding[j].location, grid_tiles[i].location)) && grid_tiles[i].type == TILE_TYPE_UNINITIALIZED)
@@ -284,6 +285,8 @@ void initialize_board(int grid_width, int grid_height)
 			} else if (!stone_surrounds && grid_tiles[i].type == TILE_TYPE_UNINITIALIZED) {
 				tile_set_type(&grid_tiles[i], TILE_TYPE_STONE);
 			}
+
+			free(surrounding);
 		}
 
 		if (grid_tiles[i].type == TILE_TYPE_UNINITIALIZED)
