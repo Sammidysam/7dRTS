@@ -28,15 +28,18 @@ void grid_draw(grid_t *grid)
 	}
 
 	glEnable(GL_TEXTURE_2D);
+	
 	for(int i = 0; i < grid_tiles_len; i++) {
+		printf("i=%d ", i);
 		grid_tile_draw(grid, &grid_tiles[i], (render_distance));
 	}
+	
 	glDisable(GL_TEXTURE_2D);
 }
 
 grid_t *grid_new()
 {
-	grid_t *n = (grid_t *)malloc(sizeof(grid_t));
+	grid_t *n = (grid_t *)calloc(1, sizeof(grid_t));
 
 	return n;
 }

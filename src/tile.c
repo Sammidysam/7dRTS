@@ -42,9 +42,9 @@ void _tile_populate_texture_from_type(tile_t *n)
 
 tile_t *tile_new_empty_int(int point, int grid_width, int grid_height)
 {
-	tile_t *n = (tile_t *)malloc(sizeof(tile_t));
+	tile_t *n = (tile_t *)calloc(1, sizeof(tile_t));
 
-	n->location = (point_t *)malloc(sizeof(point_t));
+	n->location = (point_t *)calloc(1, sizeof(point_t));
 
 	n->type = TILE_TYPE_UNINITIALIZED;
 
@@ -58,9 +58,9 @@ tile_t *tile_new_empty_int(int point, int grid_width, int grid_height)
 
 tile_t *tile_new_empty_ints(int x, int y)
 {
-	tile_t *n = (tile_t *)malloc(sizeof(tile_t));
+	tile_t *n = (tile_t *)calloc(1, sizeof(tile_t));
 
-	n->location = (point_t *)malloc(sizeof(point_t));
+	n->location = (point_t *)calloc(1, sizeof(point_t));
 
 	n->type = TILE_TYPE_UNINITIALIZED;
 
@@ -74,9 +74,9 @@ tile_t *tile_new_empty_ints(int x, int y)
 
 tile_t *tile_new_empty_point(point_t *location)
 {
-	tile_t *n = (tile_t *)malloc(sizeof(tile_t));
+	tile_t *n = (tile_t *)calloc(1, sizeof(tile_t));
 
-	n->location = (point_t *)malloc(sizeof(point_t));
+	n->location = (point_t *)calloc(1, sizeof(point_t));
 
 	n->type = TILE_TYPE_UNINITIALIZED;
 
@@ -192,7 +192,7 @@ tile_direction_t tile_direction_from_point(point_t *point)
 tile_t *tile_get_surrounding(tile_t *tile)
 {
 	tile_t *surrounding;
-	surrounding = (tile_t *)malloc(sizeof(tile_t) * 8);
+	surrounding = (tile_t *)calloc(8, sizeof(tile_t));
 
 	for (int i = 0; i < 8; i++) {
 		if (i == TILE_DIRECTION_MAX)
@@ -212,7 +212,7 @@ tile_t *tile_get_surrounding(tile_t *tile)
 		}
 
 		if (!set_value)
-			surrounding[i] = *tile_new_from_type_point(TILE_TYPE_FAKE, &location);
+			surrounding[i] = *tile_new_from_type_point(TILE_TYPE_FAKE, location);
 
 		free(location);
 	}

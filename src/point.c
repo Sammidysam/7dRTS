@@ -4,7 +4,7 @@
 
 point_t *point_new(int x, int y)
 {
-	point_t *point = (point_t *)malloc(sizeof(point_t));
+	point_t *point = (point_t *)calloc(1, sizeof(point_t));
 	
 	point->x = x;
 	point->y = y;
@@ -14,17 +14,17 @@ point_t *point_new(int x, int y)
 
 point_t *point_one_d_to_two_d(int one_d, int grid_width, int grid_height)
 {
-	point_t *two_d = (point_t *)malloc(sizeof(point_t));
+	point_t *two_d = (point_t *)calloc(1, sizeof(point_t));
 	
 	two_d->x = one_d % grid_width;
-	two_d->y = one_d / grid_height;
+	two_d->y = one_d / grid_width;
 	
 	return two_d;
 }
 
 int point_two_d_to_one_d(point_t *two_d, int grid_width, int grid_height)
 {
-	return two_d->y * grid_height + two_d->x;
+	return (two_d->y * grid_width) + two_d->x;
 }
 
 int point_one_d_x(int one_d, int grid_width, int grid_height)
@@ -34,7 +34,7 @@ int point_one_d_x(int one_d, int grid_width, int grid_height)
 
 int point_one_d_y(int one_d, int grid_width, int grid_height)
 {
-	return one_d / grid_height;
+	return one_d / grid_width;
 }
 
 bool point_equals(point_t *a_point, point_t *other_point)

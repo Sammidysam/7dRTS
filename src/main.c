@@ -131,11 +131,11 @@ void init_game()
 {
 	/* init grid */
 	grid = grid_new();
-	grid->width = 6;
+	grid->width = 8;
 	grid->height = 6;
 
 	grid_tiles_len = grid->width * grid->height;
-	grid_tiles = (tile_t *)malloc(grid_tiles_len * sizeof(tile_t));
+	grid_tiles = (tile_t *)calloc(grid_tiles_len, sizeof(tile_t));
 
 	/* set tiles as empty */
 	for (int i = 0; i < grid->width * grid->height; i++)
@@ -170,7 +170,7 @@ void init_game()
 	}
 	
 	/* this is to set the array of players in the game */
-	// players = (player_t *)malloc(players * sizeof(player_t));
+	// players = (player_t *)calloc(players, sizeof(player_t));
 }
 
 void init_buttons()
@@ -323,12 +323,12 @@ int main(int argc, char *argv[])
 
 	/* initialize strings */
 	/* allocate memory */
-	name = (char *)malloc(1024 * sizeof(char));
-	description = (char *)malloc(1024 * sizeof(char));
-	new_game = (char *)malloc(1024 * sizeof(char));
-	load_game = (char *)malloc(1024 * sizeof(char));
-	how_to_play = (char *)malloc(1024 * sizeof(char));
-	settings = (char *)malloc(1024 * sizeof(char));
+	name = (char *)calloc(1024, sizeof(char));
+	description = (char *)calloc(1024, sizeof(char));
+	new_game = (char *)calloc(1024, sizeof(char));
+	load_game = (char *)calloc(1024, sizeof(char));
+	how_to_play = (char *)calloc(1024, sizeof(char));
+	settings = (char *)calloc(1024, sizeof(char));
 
 	/* assign values */
 	name = "7dRTS";
