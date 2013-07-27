@@ -221,17 +221,35 @@ tile_t *tile_get_surrounding(tile_t *tile)
 }
 
 void initialize_board(int grid_width, int grid_height)
-{ 
+{
+	/* create tile types */
 	for (int i = 0; i < grid_tiles_len; i++) {
-		int result = rand() % 50;
+		tile_t *surrounding = tile_get_surrounding(&grid_tiles[i]);
 
-		if (result < 30)
-			tile_set_type(&grid_tiles[i], TILE_TYPE_GRASS);
-		else if (result < 45)
-			tile_set_type(&grid_tiles[i], TILE_TYPE_FOREST);
-		else if (result < 49)
-			tile_set_type(&grid_tiles[i], TILE_TYPE_STONE);
-		else
-			tile_set_type(&grid_tiles[i], TILE_TYPE_WATER);
+		int num_real_initialized_tiles = 0;
+		for (int j = 0; j < 8; j++)
+			if (surrounding[j].type != TILE_TYPE_FAKE && surrounding[j].type != TILE_TYPE_UNINITIALIZED)
+				num_real_initialized_tiles++;
+
+		if (num_real_initialized_tiles != 8) {
+			int result = rand() % 50;
+
+			if (result < 30)
+				tile_set_type(&grid_tiles[i], TILE_TYPE_GRASS);
+			else if (result < 45)
+				tile_set_type(&grid_tiles[i], TILE_TYPE_FOREST);
+			else if (result < 49)
+				tile_set_type(&grid_tiles[i], TILE_TYPE_STONE);
+			else
+				tile_set_type(&grid_tiles[i], TILE_TYPE_WATER);
+		} else {
+			tile_set_type(&grid_tiles[i], surrounding[rand() % 4].type);
+		}
+
+		free(surrounding);
 	}
+
+	/* create castles */
+	for (int i = 0; i < num_players; i++)
+		;
 }

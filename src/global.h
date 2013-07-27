@@ -28,4 +28,6 @@ extern grid_t *grid;
 extern tile_t *grid_tiles;
 extern int grid_tiles_len;
 
+extern int num_players;
+
 #endif
