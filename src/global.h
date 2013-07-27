@@ -24,5 +24,6 @@ extern config_t config;
 extern bool has_config;
 
 extern tile_t *grid_tiles;
+extern int grid_tiles_len;
 
 #endif

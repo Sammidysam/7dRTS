@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include <src/texture.h>
+#include <src/global.h>
 
 #include <src/tile.h>
 
@@ -142,11 +144,60 @@ player_t *tile_get_owner(tile_t *tile)
 	return tile->owner;
 }
 
+point_t *tile_direction_add(tile_direction_t direction)
+{ 
+	switch (direction) {
+	case TILE_DIRECTION_UP:
+		return point_new(0, 1);
+	case TILE_DIRECTION_DOWN:
+		return point_new(0, -1);
+	case TILE_DIRECTION_RIGHT:
+		return point_new(1, 0);
+	case TILE_DIRECTION_LEFT:
+		return point_new(-1, 0);
+	case TILE_DIRECTION_UP_RIGHT:
+		return point_new(1, 1);
+	case TILE_DIRECTION_DOWN_RIGHT:
+		return point_new(1, -1);
+	case TILE_DIRECTION_DOWN_LEFT:
+		return point_new(-1, -1);
+	case TILE_DIRECTION_UP_LEFT:
+		return point_new(-1, 1);
+	default:
+		printf("Invalid direction %d at function tile_direction_add\n", direction);
+		return point_new(0, 0);
+	}
+}
+
 tile_t *tile_get_surrounding(tile_t *tile)
 {
 	tile_t *surrounding;
+	surrounding = (tile_t *)malloc(sizeof(tile_t) * 8);
 
-	surrounding = (tile_t *)malloc(sizeof(surrounding) * 8);
+	for (int i = 0; i < 8; i++) { 
+		point_t location = *point_add(tile_direction_add(i), tile->location);
+
+		bool set_value = false;
+		
+		/* find if any tiles match location */
+		for (int j = 0; j < grid_tiles_len; j++) {
+			if (point_equals(grid_tiles[j].location, &location)) {
+				surrounding[i] = grid_tiles[j];
+				set_value = true;
+			}
+		}
+
+		if (!set_value)
+			surrounding[i] = *tile_new_from_type_point(TILE_TYPE_FAKE, &location);
+
+		if (surrounding[i].type != TILE_TYPE_FAKE)
+			printf("\tx=%d y=%d\n", surrounding[i].location->x, surrounding[i].location->y);
+	}
 	
 	return surrounding;
+}
+
+void initialize_board()
+{
+	
 }

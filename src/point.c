@@ -42,14 +42,18 @@ bool point_equals(point_t *a_point, point_t *other_point)
 	return (a_point->x == other_point->x && a_point->y == other_point->y) ? true : false;
 }
 
-void point_add(point_t *add_to, point_t *from)
+point_t *point_add(point_t *add_to, point_t *from)
 {
 	add_to->x += from->x;
 	add_to->y += from->y;
+
+	return add_to;
 }
 
-void point_subtract(point_t *subtract_to, point_t *from)
+point_t *point_subtract(point_t *subtract_to, point_t *from)
 {
 	subtract_to->x -= from->x;
 	subtract_to->y -= from->y;
+
+	return subtract_to;
 }

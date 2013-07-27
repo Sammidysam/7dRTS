@@ -17,4 +17,9 @@ void config_get_item_double(double *value, const char *path);
 
 void config_get_item_int_list(int **list, int *length, const char *path);
 
+void config_print_debug_int(char *var_name, int value);
+void config_print_debug_string(char *var_name, char *value);
+void config_print_debug_bool(char *var_name, bool value);
+void config_print_debug_double(char *var_name, double value);
+
 #endif

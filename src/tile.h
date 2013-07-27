@@ -29,6 +29,8 @@ typedef enum tile_type_t {
 	TILE_TYPE_FARM,
 	TILE_TYPE_CASTLE_WALL,
 	TILE_TYPE_CASTLE_TOWER,
+
+	TILE_TYPE_FAKE,
 	
 	TILE_TYPE_MAX
 } tile_type_t;
@@ -58,8 +60,10 @@ tile_type_t tile_get_type(tile_t *tile);
 void tile_set_owner(tile_t *tile, player_t *owner);
 player_t *tile_get_owner(tile_t *tile);
 
-point_t tile_direction_add(tile_direction_t direction);
+point_t *tile_direction_add(tile_direction_t direction);
 
 tile_t *tile_get_surrounding(tile_t *tile);
+
+void initialize_board();
 
 #endif

@@ -15,3 +15,4 @@ config_t config;
 bool has_config = true;
 
 tile_t *grid_tiles;
+int grid_tiles_len;

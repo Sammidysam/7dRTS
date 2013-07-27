@@ -134,7 +134,8 @@ void init_game()
 	grid->width = 8;
 	grid->height = 6;
 
-	grid_tiles = (tile_t *)malloc((grid->width * grid->height) * sizeof(tile_t));
+	grid_tiles_len = grid->width * grid->height;
+	grid_tiles = (tile_t *)malloc(grid_tiles_len * sizeof(tile_t));
 
 	/* set tiles as empty */
 	for (int i = 0; i < grid->width * grid->height; i++)
@@ -142,7 +143,8 @@ void init_game()
 
 	/* initialize board */
 	for (int i = 0; i < grid->width * grid->height; i++) {
-		
+		printf("surrounding %d is\n", i);
+		tile_get_surrounding(&grid_tiles[i]);
 	}
 	
 	/* this is to set the array of players in the game */
@@ -328,47 +330,62 @@ int main(int argc, char *argv[])
 
 		/* if extra time, add generation of file */
 	} else {
+		printf("parsing game.cfg...\n");
+		
 		/* load all settings */
 		config_get_item_string(&name, "window.title");
-		printf("value parsed: %s\n", name);
+		config_print_debug_string("name (window.title)", name);
 		config_get_item_int(&window_width, "window.size.width");
-		printf("value parsed: %d\n", window_width);
+		config_print_debug_int("window_width (window.size.width)", window_width);	
 		config_get_item_int(&window_height, "window.size.height");
-		printf("value parsed: %d\n", window_height);
+		config_print_debug_int("window_height (window.size.height)", window_height);
 		config_get_item_bool(&fullscreen, "window.fullscreen");
-		printf("value parsed: %s\n", (fullscreen ? "fullscreen" : "!fullscreen"));
+		config_print_debug_bool("fullscreen (window.fullscreen)", fullscreen);
 		
 		config_get_item_string(&description, "menu.game_description");
-		printf("value parsed: %s\n", description);
+		config_print_debug_string("description (menu.game_description)", description);
 		config_get_item_string(&new_game, "menu.new_game_text");
-		printf("value parsed: %s\n", new_game);
+		config_print_debug_string("new_game (menu.new_game_text)", new_game);
 		config_get_item_string(&load_game, "menu.load_game_text");
-		printf("value parsed: %s\n", load_game);
+		config_print_debug_string("load_game (menu.load_game_text)", load_game);
 		config_get_item_string(&how_to_play, "menu.how_to_play_text");
-		printf("value parsed: %s\n", how_to_play);
+		config_print_debug_string("how_to_play (menu.how_to_play_text)", how_to_play);
 		config_get_item_string(&settings, "menu.settings_text");
-		printf("value parsed: %s\n", settings);
+		config_print_debug_string("settings (menu.settings_text)", settings);
 		config_get_item_int(&default_select_button, "menu.default_selected_button");
-		printf("value parsed: %d\n", default_select_button);
+		config_print_debug_int("default_select_button (menu.default_selected_button)", default_select_button);
 				
 		config_get_item_double(&zoom, "control_handling.zoom_modifier");
-		printf("value parsed: %lf\n", zoom);
+		config_print_debug_double("zoom (control_handling.zoom_modifier)", zoom);
 		config_get_item_double(&move_speed, "control_handling.move_speed");
-		printf("value parsed: %lf\n", move_speed);
+		config_print_debug_double("move_speed (control_handling.move_speed)", move_speed);
 		config_get_item_double(&default_render_distance, "control_handling.default_render_distance");
-		printf("value parsed: %lf\n", default_render_distance);
 		render_distance = default_render_distance;
+		config_print_debug_double("default_render_distance (control_handling.default_render_distance)", default_render_distance);
 		config_get_item_int(&mouse_zoom_in, "control_handling.zoom_in_mouse");
+		config_print_debug_int("mouse_zoom_in (control_handling.zoom_in_mouse)", mouse_zoom_in);
 		config_get_item_int(&mouse_zoom_out, "control_handling.zoom_out_mouse");
+		config_print_debug_int("mouse_zoom_out (control_handling.zoom_out_mouse)", mouse_zoom_out);
 		config_get_item_int(&quit_key, "control_handling.quit_keys");
+		config_print_debug_int("quit_key (control_handling.quit_keys)", quit_key);
 		config_get_item_int(&move_up_key, "control_handling.move_up_keys");
+		config_print_debug_int("move_up_key (control_handling.move_up_key)", move_up_key);
 		config_get_item_int(&move_down_key, "control_handling.move_down_keys");
+		config_print_debug_int("move_down_key (control_handling.move_down_keys)", move_down_key);
 		config_get_item_int(&move_left_key, "control_handling.move_left_keys");
+		config_print_debug_int("move_left_key (control_handling.move_left_keys)", move_left_key);
 		config_get_item_int(&move_right_key, "control_handling.move_right_keys");
+		config_print_debug_int("move_right_key (control_handling.move_right_keys)", move_right_key);
 		config_get_item_int(&zoom_in_key, "control_handling.zoom_in_keys");
+		config_print_debug_int("zoom_in_key (control_handling.zoom_in_keys)", zoom_in_key);
 		config_get_item_int(&zoom_out_key, "control_handling.zoom_out_keys");
+		config_print_debug_int("zoom_out_key (control_handling.zoom_out_keys)", zoom_out_key);
 		config_get_item_int(&reset_key,"control_handling.reset_render_distance_keys");
+		config_print_debug_int("reset_key (control_handloing.reset_render_distance_keys)", reset_key);
 		config_get_item_int(&confirm_key, "control_handling.confirm_selection_keys");
+		config_print_debug_int("confirm_key (control_handling.confirm_selection_keys)", confirm_key);
+
+		printf("\n");
 	}
 	
 	glutInit(&argc, argv);

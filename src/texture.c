@@ -223,6 +223,8 @@ GLuint _texture_load_png_texture(const char *filename) {
 
 void load_textures()
 {
+	printf("loading textures...\n");
+	
 	grass_texture = _texture_load_png_texture("img/grass.png");
 	forest_texture = _texture_load_png_texture("img/tree/oak.png");
 	water_texture = _texture_load_png_texture("img/water.png");

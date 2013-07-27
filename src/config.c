@@ -87,3 +87,23 @@ void config_get_item_int_list(int **list, int *length, const char *path)
 		free(setting);
 	}
 }
+
+void config_print_debug_int(char *var_name, int value)
+{
+	printf("value parsed: %s = %d\n", var_name, value);
+}
+
+void config_print_debug_string(char *var_name, char *value)
+{
+	printf("value parsed: %s = \"%s\"\n", var_name, value);
+}
+
+void config_print_debug_bool(char *var_name, bool value)
+{
+	printf("value parsed: %s = %s\n", var_name, value ? "true" : "false");
+}
+
+void config_print_debug_double(char *var_name, double value)
+{
+	printf("value parsed: %s = %e\n", var_name, value);
+}

@@ -18,7 +18,7 @@ int point_one_d_y(int one_d, int grid_width, int grid_height);
 
 bool point_equals(point_t *a_point, point_t *other_point);
 
-void point_add(point_t *add_to, point_t *from);
-void point_subtract(point_t *subtract_to, point_t *from);
+point_t *point_add(point_t *add_to, point_t *from);
+point_t *point_subtract(point_t *subtract_to, point_t *from);
 
 #endif
