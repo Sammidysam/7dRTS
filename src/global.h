@@ -5,6 +5,7 @@
 
 #include <libconfig.h>
 
+#include <src/grid.h>
 #include <src/tile.h>
 
 #define LEN(x) (sizeof(x) / sizeof(x[0]))
@@ -23,6 +24,7 @@ extern double offset_y;
 extern config_t config;
 extern bool has_config;
 
+extern grid_t *grid;
 extern tile_t *grid_tiles;
 extern int grid_tiles_len;
 

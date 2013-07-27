@@ -145,10 +145,38 @@ void init_game()
 	initialize_board(grid->width, grid->height);
 
 	for (int i = 0; i < grid_tiles_len; i++)
-		printf("tile %d has type %d\n", i, grid_tiles[i].type);
+		printf("tile %d has type %s\n", i,
+		       (grid_tiles[i].type == TILE_TYPE_UNINITIALIZED ? "uninitialized" :
+		        (grid_tiles[i].type == TILE_TYPE_GRASS ? "grass" :
+		         (grid_tiles[i].type == TILE_TYPE_FOREST ? "forest" :
+		          (grid_tiles[i].type == TILE_TYPE_WATER ? "water" :
+		           (grid_tiles[i].type == TILE_TYPE_STONE ? "stone" :
+		            (grid_tiles[i].type == TILE_TYPE_FARM ? "farm" :
+		             (grid_tiles[i].type == TILE_TYPE_CASTLE_WALL ? "castle wall" :
+		              (grid_tiles[i].type == TILE_TYPE_CASTLE_TOWER ? "castle tower" :
+		               (grid_tiles[i].type == TILE_TYPE_FAKE ? "fake" : "unknown"))))))))));
 	
 	/* this is to set the array of players in the game */
 	// players = (player_t *)malloc(players * sizeof(player_t));
+	for(int i = 0; i < grid->height; i += 1) {
+		for(int j = 0; j < grid->width; j += 1) {
+			char d;
+			switch(grid_tiles[(i * grid->width) + j].type) {
+			case TILE_TYPE_UNINITIALIZED: d = ' '; break;
+			case TILE_TYPE_GRASS: d = ','; break;
+			case TILE_TYPE_FOREST: d = 'T'; break;
+			case TILE_TYPE_WATER: d = '~'; break;
+			case TILE_TYPE_STONE: d = '@'; break;
+			case TILE_TYPE_FARM: d = '#'; break;
+			case TILE_TYPE_CASTLE_WALL: d = '|'; break;
+			case TILE_TYPE_CASTLE_TOWER: d = '^'; break;
+			case TILE_TYPE_FAKE: d = '_'; break;
+			default: d = ' '; break;
+			};
+			putchar(d);
+		}
+		putchar('\n');
+	}
 }
 
 void init_buttons()
