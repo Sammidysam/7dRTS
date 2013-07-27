@@ -1,5 +1,7 @@
 #include <stdlib.h>
 
+#include <math.h>
+
 #include <src/point.h>
 
 point_t *point_new(int x, int y)
@@ -43,11 +45,22 @@ bool point_equals(point_t *a_point, point_t *other_point)
 }
 
 point_t *point_add(point_t *add_to, point_t *from)
-{
-	return point_new(add_to->x + from->x, add_to->y + from->y);
+{ 
+	add_to->x += from->x;
+	add_to->y += from->y;
+	
+	return add_to;
 }
 
 point_t *point_subtract(point_t *subtract_to, point_t *from)
+{ 
+	subtract_to->x += from->x;
+	subtract_to->y += from->y;
+	
+	return subtract_to;
+}
+
+point_t *point_distance(point_t *a_point, point_t *other_point)
 {
-	return point_new(subtract_to->x - from->x, subtract_to->y - from->y);
+	return point_new(abs(a_point->x - other_point->x), abs(a_point->y - other_point->y));
 }

@@ -21,4 +21,6 @@ bool point_equals(point_t *a_point, point_t *other_point);
 point_t *point_add(point_t *add_to, point_t *from);
 point_t *point_subtract(point_t *subtract_to, point_t *from);
 
+point_t *point_distance(point_t *a_point, point_t *other_point);
+
 #endif

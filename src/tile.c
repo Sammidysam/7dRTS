@@ -250,6 +250,10 @@ void initialize_board(int grid_width, int grid_height)
 	}
 
 	/* create castles */
-	for (int i = 0; i < num_players; i++)
-		;
+	for (int i = 0; i < num_players; i++) {
+		point_t *location = point_new(rand() % grid_width, rand() % grid_height);
+		for (int j = 0; j < i; j++) {
+			point_t *distance = point_distance(location, )
+		}
+	}
 }
