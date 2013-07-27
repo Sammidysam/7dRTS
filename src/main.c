@@ -131,8 +131,8 @@ void init_game()
 {
 	/* init grid */
 	grid = grid_new();
-	grid->width = 8;
-	grid->height = 6;
+	grid->width = 80;
+	grid->height = 60;
 
 	grid_tiles_len = grid->width * grid->height;
 	grid_tiles = (tile_t *)calloc(grid_tiles_len, sizeof(tile_t));

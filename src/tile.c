@@ -223,13 +223,13 @@ tile_t *tile_get_surrounding(tile_t *tile)
 void initialize_board(int grid_width, int grid_height)
 { 
 	for (int i = 0; i < grid_tiles_len; i++) {
-		int result = rand() % 30;
+		int result = rand() % 50;
 
-		if (result < 15)
+		if (result < 30)
 			tile_set_type(&grid_tiles[i], TILE_TYPE_GRASS);
-		else if (result < 22)
+		else if (result < 45)
 			tile_set_type(&grid_tiles[i], TILE_TYPE_FOREST);
-		else if (result < 26)
+		else if (result < 49)
 			tile_set_type(&grid_tiles[i], TILE_TYPE_STONE);
 		else
 			tile_set_type(&grid_tiles[i], TILE_TYPE_WATER);
