@@ -29,10 +29,8 @@ void grid_draw(grid_t *grid)
 
 	glEnable(GL_TEXTURE_2D);
 	
-	for(int i = 0; i < grid_tiles_len; i++) {
-		printf("i=%d ", i);
+	for(int i = 0; i < grid_tiles_len; i++)
 		grid_tile_draw(grid, &grid_tiles[i], (render_distance));
-	}
 	
 	glDisable(GL_TEXTURE_2D);
 }
@@ -45,7 +43,14 @@ grid_t *grid_new()
 }
 
 void grid_tile_draw(grid_t *grid, tile_t *tile, double r)
-{ 
+{
+	tile_t *grass = tile_new_from_type_ints(TILE_TYPE_GRASS, tile->location->x, tile->location->y);
+	
+	if (tile->type == TILE_TYPE_FOREST)
+		grid_tile_draw(grid, grass, (render_distance + 0.0001));
+
+	free(grass);
+	
 	double osx = (offset_x + -(grid->width / 2.0));
 	double osy = (offset_y + -(grid->height / 2.0));
 

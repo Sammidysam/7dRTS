@@ -223,73 +223,15 @@ tile_t *tile_get_surrounding(tile_t *tile)
 void initialize_board(int grid_width, int grid_height)
 { 
 	for (int i = 0; i < grid_tiles_len; i++) {
-		tile_t *surrounding = tile_get_surrounding(&grid_tiles[i]);
+		int result = rand() % 30;
 
-		int real_initialized_tiles = 0;
-		for (int j = 0; j < 8; j++) {
-			if (surrounding[j].type != TILE_TYPE_FAKE && surrounding[j].type != TILE_TYPE_UNINITIALIZED)
-				real_initialized_tiles++;
-		}
-
-		if (real_initialized_tiles == 0 && grid_tiles[i].type == TILE_TYPE_UNINITIALIZED) {
-			tile_set_type(&grid_tiles[i], rand() % 4 + 1);
-		} else {
-			/* get surrounding types */
-			bool grass_surrounds = false;
-			bool forest_surrounds = false;
-			bool water_surrounds = false;
-			bool stone_surrounds = false;
-			for (int j = 0; j < 8; j++) {
-				if (surrounding[j].type != TILE_TYPE_FAKE && surrounding[j].type != TILE_TYPE_UNINITIALIZED) {
-					switch (surrounding[j].type) {
-					case TILE_TYPE_GRASS:
-						grass_surrounds = true;
-						break;
-					case TILE_TYPE_FOREST:
-						forest_surrounds = true;
-						break;
-					case TILE_TYPE_WATER:
-						water_surrounds = true;
-						break;
-					case TILE_TYPE_STONE:
-						stone_surrounds = true;
-						break;
-					default:
-						printf("unexpected tile type %d at initialize_board\n", surrounding[j].type);
-						break;
-					}
-				}
-			}
-
-			/* first, we want to continue lakes if there is one */
-			if (water_surrounds) {
-				for (int j = 0; j < 8; j++) {
-					if (surrounding[j].type == TILE_TYPE_WATER) {
-						for (int k = 0; k < 4; k++) {
-							int index = point_two_d_to_one_d(point_add(surrounding[j].location, tile_direction_add(k)), grid_width, grid_height);
-
-							/* we don't want a lake of 3 straight tiles, that's ugly and river-like */
-							if (grid_tiles[index].type == TILE_TYPE_WATER && tile_direction_from_point(point_subtract(grid_tiles[index].location, surrounding[j].location)) != tile_direction_from_point(point_subtract(surrounding[j].location, grid_tiles[i].location)) && grid_tiles[i].type == TILE_TYPE_UNINITIALIZED)
-								tile_set_type(&grid_tiles[i], TILE_TYPE_WATER);
-						}
-
-						if (grid_tiles[i].type == TILE_TYPE_UNINITIALIZED && tile_direction_from_point(point_subtract(surrounding[j].location, grid_tiles[i].location)) < TILE_DIRECTION_UP_RIGHT)
-							tile_set_type(&grid_tiles[i], TILE_TYPE_WATER);
-					}
-				}
-			} else if (forest_surrounds) {
-				for (int j = 0; j < 8; j++) {
-					if (surrounding[j].type == TILE_TYPE_FOREST && tile_direction_from_point(point_subtract(surrounding[j].location, grid_tiles[i].location)) < TILE_DIRECTION_UP_RIGHT && grid_tiles[i].type == TILE_TYPE_UNINITIALIZED)
-						tile_set_type(&grid_tiles[i], TILE_TYPE_FOREST);
-				}
-			} else if (!stone_surrounds && grid_tiles[i].type == TILE_TYPE_UNINITIALIZED) {
-				tile_set_type(&grid_tiles[i], TILE_TYPE_STONE);
-			}
-
-			free(surrounding);
-		}
-
-		if (grid_tiles[i].type == TILE_TYPE_UNINITIALIZED)
+		if (result < 15)
 			tile_set_type(&grid_tiles[i], TILE_TYPE_GRASS);
+		else if (result < 22)
+			tile_set_type(&grid_tiles[i], TILE_TYPE_FOREST);
+		else if (result < 26)
+			tile_set_type(&grid_tiles[i], TILE_TYPE_STONE);
+		else
+			tile_set_type(&grid_tiles[i], TILE_TYPE_WATER);
 	}
 }

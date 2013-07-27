@@ -44,16 +44,10 @@ bool point_equals(point_t *a_point, point_t *other_point)
 
 point_t *point_add(point_t *add_to, point_t *from)
 {
-	add_to->x += from->x;
-	add_to->y += from->y;
-
-	return add_to;
+	return point_new(add_to->x + from->x, add_to->y + from->y);
 }
 
 point_t *point_subtract(point_t *subtract_to, point_t *from)
 {
-	subtract_to->x -= from->x;
-	subtract_to->y -= from->y;
-
-	return subtract_to;
+	return point_new(subtract_to->x - from->x, subtract_to->y - from->y);
 }
