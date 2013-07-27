@@ -61,9 +61,10 @@ void tile_set_owner(tile_t *tile, player_t *owner);
 player_t *tile_get_owner(tile_t *tile);
 
 point_t *tile_direction_add(tile_direction_t direction);
+tile_direction_t tile_direction_from_point(point_t *point);
 
 tile_t *tile_get_surrounding(tile_t *tile);
 
-void initialize_board();
+void initialize_board(int grid_width, int grid_height);
 
 #endif

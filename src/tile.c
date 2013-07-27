@@ -169,12 +169,37 @@ point_t *tile_direction_add(tile_direction_t direction)
 	}
 }
 
+tile_direction_t tile_direction_from_point(point_t *point)
+{
+	if (point->x == 0 && point->y == 1)
+		return TILE_DIRECTION_UP;
+	else if (point->x == 0 && point->y == -1)
+		return TILE_DIRECTION_DOWN;
+	else if (point->x == 1 && point->y == 0)
+		return TILE_DIRECTION_RIGHT;
+	else if (point->x == -1 && point->y == 0)
+		return TILE_DIRECTION_LEFT;
+	else if (point->x == 1 && point->y == 1)
+		return TILE_DIRECTION_UP_RIGHT;
+	else if (point->x == 1 && point->y == -1)
+		return TILE_DIRECTION_DOWN_RIGHT;
+	else if (point->x == -1 && point->y == -1)
+		return TILE_DIRECTION_DOWN_LEFT;
+	else if (point->x == -1 && point->y == 1)
+		return TILE_DIRECTION_UP_LEFT;
+	else
+		return TILE_DIRECTION_MAX;
+}
+
 tile_t *tile_get_surrounding(tile_t *tile)
 {
 	tile_t *surrounding;
 	surrounding = (tile_t *)malloc(sizeof(tile_t) * 8);
 
-	for (int i = 0; i < 8; i++) { 
+	for (int i = 0; i < 8; i++) {
+		if (i == TILE_DIRECTION_MAX)
+			break;
+		
 		point_t location = *point_add(tile_direction_add(i), tile->location);
 
 		bool set_value = false;
@@ -189,15 +214,79 @@ tile_t *tile_get_surrounding(tile_t *tile)
 
 		if (!set_value)
 			surrounding[i] = *tile_new_from_type_point(TILE_TYPE_FAKE, &location);
-
-		if (surrounding[i].type != TILE_TYPE_FAKE)
-			printf("\tx=%d y=%d\n", surrounding[i].location->x, surrounding[i].location->y);
 	}
 	
 	return surrounding;
 }
 
-void initialize_board()
+void initialize_board(int grid_width, int grid_height)
 {
-	
+	for (int i = 0; i < grid_tiles_len; i++) { 
+		tile_t *surrounding = tile_get_surrounding(&grid_tiles[i]);
+
+		int real_initialized_tiles = 0;
+		for (int j = 0; j < 8; j++) {
+			if (surrounding[j].type != TILE_TYPE_FAKE && surrounding[j].type != TILE_TYPE_UNINITIALIZED)
+				real_initialized_tiles++;
+		}
+
+		if (real_initialized_tiles == 0 && grid_tiles[i].type == TILE_TYPE_UNINITIALIZED) {
+			tile_set_type(&grid_tiles[i], rand() % 4 + 1);
+		} else {
+			/* get surrounding types */
+			bool grass_surrounds = false;
+			bool forest_surrounds = false;
+			bool water_surrounds = false;
+			bool stone_surrounds = false;
+			for (int j = 0; j < 8; j++) {
+				if (surrounding[j].type != TILE_TYPE_FAKE && surrounding[j].type != TILE_TYPE_UNINITIALIZED) {
+					switch (surrounding[j].type) {
+					case TILE_TYPE_GRASS:
+						grass_surrounds = true;
+						break;
+					case TILE_TYPE_FOREST:
+						forest_surrounds = true;
+						break;
+					case TILE_TYPE_WATER:
+						water_surrounds = true;
+						break;
+					case TILE_TYPE_STONE:
+						stone_surrounds = true;
+						break;
+					default:
+						printf("unexpected tile type %d at initialize_board\n", surrounding[j].type);
+						break;
+					}
+				}
+			}
+
+			/* first, we want to continue lakes if there is one */
+			if (water_surrounds) {
+				for (int j = 0; j < 8; j++) {
+					if (surrounding[j].type == TILE_TYPE_WATER) {
+						for (int k = 0; k < 4; k++) {
+							int index = point_two_d_to_one_d(point_add(surrounding[j].location, tile_direction_add(i)), grid_width, grid_height);
+
+							/* we don't want a lake of 3 straight tiles, that's ugly and river-like */
+							if (grid_tiles[index].type == TILE_TYPE_WATER && tile_direction_from_point(point_subtract(grid_tiles[index].location, surrounding[j].location)) != tile_direction_from_point(point_subtract(surrounding[j].location, grid_tiles[i].location)) && grid_tiles[i].type == TILE_TYPE_UNINITIALIZED)
+								tile_set_type(&grid_tiles[i], TILE_TYPE_WATER);
+						}
+
+						if (grid_tiles[i].type == TILE_TYPE_UNINITIALIZED && tile_direction_from_point(point_subtract(surrounding[j].location, grid_tiles[i].location)) < TILE_DIRECTION_UP_RIGHT)
+							tile_set_type(&grid_tiles[i], TILE_TYPE_WATER);
+					}
+				}
+			} else if (forest_surrounds) {
+				for (int j = 0; j < 8; j++) {
+					if (surrounding[j].type == TILE_TYPE_FOREST && tile_direction_from_point(point_subtract(surrounding[j].location, grid_tiles[i].location)) < TILE_DIRECTION_UP_RIGHT && grid_tiles[i].type == TILE_TYPE_UNINITIALIZED)
+						tile_set_type(&grid_tiles[i], TILE_TYPE_FOREST);
+				}
+			} else if (!stone_surrounds && grid_tiles[i].type == TILE_TYPE_UNINITIALIZED) {
+				tile_set_type(&grid_tiles[i], TILE_TYPE_STONE);
+			}
+		}
+
+		if (grid_tiles[i].type == TILE_TYPE_UNINITIALIZED)
+			tile_set_type(&grid_tiles[i], TILE_TYPE_GRASS);
+	}
 }

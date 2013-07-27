@@ -142,10 +142,10 @@ void init_game()
 		grid_tiles[i] = *tile_new_empty_int(i, grid->width, grid->height);
 
 	/* initialize board */
-	for (int i = 0; i < grid->width * grid->height; i++) {
-		printf("surrounding %d is\n", i);
-		tile_get_surrounding(&grid_tiles[i]);
-	}
+	initialize_board(grid->width, grid->height);
+
+	for (int i = 0; i < grid_tiles_len; i++)
+		printf("tile %d has type %d\n", i, grid_tiles[i].type);
 	
 	/* this is to set the array of players in the game */
 	// players = (player_t *)malloc(players * sizeof(player_t));
@@ -297,7 +297,7 @@ void clean_up()
 
 int main(int argc, char *argv[])
 {
-	// srand((unsigned int)time(NULL));
+	srand((unsigned int)time(NULL));
 
 	/* initialize strings */
 	/* allocate memory */
