@@ -19,6 +19,7 @@
 #include <src/point.h>
 #include <src/castle.h>
 #include <src/player.h>
+#include <src/save_manager.h>
 
 #include <src/main.h>
 
@@ -37,6 +38,13 @@ char *new_game;
 char *load_game;
 char *how_to_play;
 char *settings;
+
+char *select_message;
+char *no_saves;
+
+char **save_list;
+
+int selected_save = 0;
 
 button_t buttons [4];
 
@@ -155,6 +163,10 @@ void init_game()
 	printf("\tT=forest\n");
 	printf("\t~=water\n");
 	printf("\t@=stone\n");
+	printf("\t#=farm\n");
+	printf("\t|=castle wall\n");
+	printf("\t^=castle tower\n");
+	printf("\n");
 	for(int i = 0; i < grid->height; i++) {
 		for(int j = 0; j < grid->width; j++) {
 			char d;
@@ -205,15 +217,19 @@ void update(int value)
 			if (i == quit_key) {
 				exit(0);
 			} else if (i == move_up_key) {
-				if (draw_mode != DRAW_MODE_MENU)
+				if (draw_mode == DRAW_MODE_IN_GAME)
 					offset_y -= move_speed;
-				else
+				else if (draw_mode == DRAW_MODE_MENU)
 					menu_select(DIRECTION_UP, buttons, LEN(buttons));
+				else if (draw_mode == DRAW_MODE_LOAD_GAME)
+					save_manager_move_select(&selected_save, false);
 			} else if (i == move_down_key) {
-				if (draw_mode != DRAW_MODE_MENU)
+				if (draw_mode == DRAW_MODE_IN_GAME)
 					offset_y += move_speed;
-				else
+				else if (draw_mode == DRAW_MODE_MENU)
 					menu_select(DIRECTION_DOWN, buttons, LEN(buttons));
+				else if (draw_mode == DRAW_MODE_LOAD_GAME)
+					save_manager_move_select(&selected_save, true);
 			} else if (i == move_left_key) {
 				if (draw_mode != DRAW_MODE_MENU)
 					offset_x += move_speed;
@@ -247,6 +263,7 @@ void update(int value)
 						break;
 					case 1:
 						draw_mode = DRAW_MODE_LOAD_GAME;
+						save_manager_get_saves(save_list);
 						break;
 					case 2:
 						draw_mode = DRAW_MODE_HOW_TO_PLAY;
@@ -286,7 +303,7 @@ void draw_screen()
 		grid_draw(grid);
 		break;
 	case DRAW_MODE_LOAD_GAME:
-		/* implement */
+		save_manager_draw_saves(save_list, select_message, no_saves, selected_save);
 		break;
 	case DRAW_MODE_HOW_TO_PLAY:
 		/* implement */
@@ -314,6 +331,13 @@ void clean_up()
 	free(load_game);
 	free(how_to_play);
 	free(settings);
+	
+	free(select_message);
+	free(no_saves);
+
+	for (int i = 0; i < save_manager_get_save_number(); i++)
+		free(save_list[i]);
+	free(save_list);
 
 	free(grid_tiles);
 	free(grid);
@@ -334,6 +358,9 @@ int main(int argc, char *argv[])
 	load_game = (char *)calloc(1024, sizeof(char));
 	how_to_play = (char *)calloc(1024, sizeof(char));
 	settings = (char *)calloc(1024, sizeof(char));
+	
+	select_message = (char *)calloc(1024, sizeof(char));
+	no_saves = (char *)calloc(1024, sizeof(char));
 
 	/* assign values */
 	name = "7dRTS";
@@ -343,6 +370,13 @@ int main(int argc, char *argv[])
 	load_game = "Load Game";
 	how_to_play = "How to Play";
 	settings = "Settings";
+	
+	select_message = "Please select a save file to play.";
+	no_saves = "No saves detected!";
+
+	save_list = (char **)calloc(save_manager_get_save_number(), sizeof(char *));
+	for (int i = 0; i < save_manager_get_save_number(); i++)
+		save_list[i] = (char *)calloc(1024, sizeof(char));
 
 	/* set up config */
 	config_init(&config);
@@ -369,7 +403,6 @@ int main(int argc, char *argv[])
 		config_print_debug_int("window_height (window.size.height)", window_height);
 		config_get_item_bool(&fullscreen, "window.fullscreen");
 		config_print_debug_bool("fullscreen (window.fullscreen)", fullscreen);
-		
 		config_get_item_string(&description, "menu.game_description");
 		config_print_debug_string("description (menu.game_description)", description);
 		config_get_item_string(&art_credits, "menu.art_description");
@@ -384,6 +417,11 @@ int main(int argc, char *argv[])
 		config_print_debug_string("settings (menu.settings_text)", settings);
 		config_get_item_int(&default_select_button, "menu.default_selected_button");
 		config_print_debug_int("default_select_button (menu.default_selected_button)", default_select_button);
+
+		config_get_item_string(&select_message, "saves.select_text");
+		config_print_debug_string("select_message (saves.select_text)", select_message);
+		config_get_item_string(&no_saves, "saves.no_saves_detected_text");
+		config_print_debug_string("no_saves (saves.no_saves_detected_text)", no_saves);
 				
 		config_get_item_double(&zoom, "control_handling.zoom_modifier");
 		config_print_debug_double("zoom (control_handling.zoom_modifier)", zoom);
