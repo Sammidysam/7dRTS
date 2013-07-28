@@ -84,6 +84,7 @@ void menu_draw_buttons(button_t buttons[], size_t button_num)
 		if (buttons[i].selected) {
 			glColor3d(1.0, 0.0, 0.0);
 			glLineWidth(BORDER_WIDTH);
+			
 			glBegin(GL_LINE_LOOP);
 			glVertex3d(x_start, y_start, -40.0);
 			glVertex3d(x_start, y_start - button_height + BUTTON_GAP, -40.0);

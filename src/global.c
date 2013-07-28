@@ -23,3 +23,6 @@ int num_players = 2;
 castle_t *castles;
 
 player_t *players;
+
+int unit_attacks [5];
+int unit_healths [5];

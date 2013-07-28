@@ -63,9 +63,16 @@ int zoom_in_key = KEY_CTRL_W;
 int zoom_out_key = KEY_CTRL_S;
 int reset_key = KEY_CTRL_R;
 int confirm_key = KEY_ENTER;
-int menu_key = 'q';
+int tile_up_key = 'i';
+int tile_down_key = 'k';
+int tile_left_key = 'j';
+int tile_right_key = 'l';
 
 draw_mode_t draw_mode = DRAW_MODE_MENU;
+
+int selected_grid_tile;
+
+bool game_init = false;
 
 void zoom_in()
 {
@@ -149,6 +156,8 @@ void init_game()
 	grid->width = 80;
 	grid->height = 60;
 
+	selected_grid_tile = point_two_d_to_one_d(point_new(0, grid->height - 1), grid->width, grid->height);
+
 	grid_tiles_len = grid->width * grid->height;
 	grid_tiles = (tile_t *)calloc(grid_tiles_len, sizeof(tile_t));
 
@@ -216,7 +225,12 @@ void update(int value)
 	for (int i = 0; i < 256; i++) {
 		if (key_down[i]) {
 			if (i == quit_key) {
-				exit(0);
+				if (draw_mode != DRAW_MODE_MENU) {
+					draw_mode = DRAW_MODE_MENU;
+					key_down[i] = false;
+				} else {
+					exit(0);
+				}
 			} else if (i == move_up_key) {
 				if (draw_mode == DRAW_MODE_IN_GAME)
 					offset_y -= move_speed;
@@ -259,7 +273,10 @@ void update(int value)
 
 					switch (selected_button) {
 					case 0:
-						init_game();
+						if (!game_init) {
+							init_game();
+							game_init = true;
+						}
 						draw_mode = DRAW_MODE_IN_GAME;
 						break;
 					case 1:
@@ -277,8 +294,18 @@ void update(int value)
 						break;
 					}
 				}
-			} else if (i == menu_key) {
-				draw_mode = DRAW_MODE_MENU;
+			} else if (i == tile_up_key) {
+				if (point_add_safe(tile_direction_add(TILE_DIRECTION_UP), grid_tiles[selected_grid_tile].location)->y < grid->height)
+					selected_grid_tile += grid->width;
+			} else if (i == tile_down_key) {
+				if (point_add_safe(tile_direction_add(TILE_DIRECTION_DOWN), grid_tiles[selected_grid_tile].location)->y > -1)
+					selected_grid_tile -= grid->width;
+			} else if (i == tile_left_key) {
+				if (point_add_safe(tile_direction_add(TILE_DIRECTION_LEFT), grid_tiles[selected_grid_tile].location)->x > -1)
+					selected_grid_tile--;
+			} else if (i == tile_right_key) {
+				if (point_add_safe(tile_direction_add(TILE_DIRECTION_RIGHT), grid_tiles[selected_grid_tile].location)->x < grid->width)
+					selected_grid_tile++;
 			} else {
 				printf("Unsupported key %d pressed\n", i);
 			}
@@ -303,7 +330,7 @@ void draw_screen()
 		menu_draw_buttons(buttons, LEN(buttons));
 		break;
 	case DRAW_MODE_IN_GAME:
-		grid_draw(grid);
+		grid_draw(grid, selected_grid_tile);
 		break;
 	case DRAW_MODE_LOAD_GAME:
 		save_manager_draw_saves(save_list, select_message, no_saves, selected_save);
@@ -464,6 +491,14 @@ int main(int argc, char *argv[])
 		config_print_debug_int("move_left_key (control_handling.move_left_key)", move_left_key);
 		config_get_item_int(&move_right_key, "control_handling.move_right_key");
 		config_print_debug_int("move_right_key (control_handling.move_right_key)", move_right_key);
+		config_get_item_int(&tile_up_key, "control_handling.tile_up_key");
+		config_print_debug_int("tile_up_key (control_handling.tile_up_key)", tile_up_key);
+		config_get_item_int(&tile_down_key, "control_handling.tile_down_key");
+		config_print_debug_int("tile_down_key (control_handling.tile_down_key)", tile_down_key);
+		config_get_item_int(&tile_left_key, "control_handling.tile_left_key");
+		config_print_debug_int("tile_left_key (control_handling.tile_left_key)", tile_left_key);
+		config_get_item_int(&tile_right_key, "control_handling.tile_right_key");
+		config_print_debug_int("tile_right_key (control_handling.tile_right_key)", tile_right_key);
 		config_get_item_int(&zoom_in_key, "control_handling.zoom_in_key");
 		config_print_debug_int("zoom_in_key (control_handling.zoom_in_key)", zoom_in_key);
 		config_get_item_int(&zoom_out_key, "control_handling.zoom_out_key");
@@ -472,7 +507,27 @@ int main(int argc, char *argv[])
 		config_print_debug_int("reset_key (control_handloing.reset_render_distance_key)", reset_key);
 		config_get_item_int(&confirm_key, "control_handling.confirm_selection_key");
 		config_print_debug_int("confirm_key (control_handling.confirm_selection_key)", confirm_key);
-		config_get_item_int(&menu_key, "control_handling.go_to_menu_key");
+
+		config_get_item_int(&unit_attacks[0], "gameplay.units.attacks.swordsman");
+		config_print_debug_int("unit_attacks[0] (gameplay.units.attacks.swordsman)", unit_attacks[0]);
+		config_get_item_int(&unit_attacks[1], "gameplay.units.attacks.horseman");
+		config_print_debug_int("unit_attacks[1] (gameplay.units.attacks.horseman)", unit_attacks[1]);
+		config_get_item_int(&unit_attacks[2], "gameplay.units.attacks.knight");
+		config_print_debug_int("unit_attacks[2] (gameplay.units.attacks.knight)", unit_attacks[2]);
+		config_get_item_int(&unit_attacks[3], "gameplay.units.attacks.trebuchet");
+		config_print_debug_int("unit_attacks[3] (gameplay.units.attacks.trebuchet)", unit_attacks[3]);
+		config_get_item_int(&unit_attacks[4], "gameplay.units.attacks.archer");
+		config_print_debug_int("unit_attacks[4] (gameplay.units.attacks.archer)", unit_attacks[4]);
+		config_get_item_int(&unit_healths[0], "gameplay.units.healths.swordsman");
+		config_print_debug_int("unit_healths[0] (gameplay.units.healths.swordsman)", unit_healths[0]);
+		config_get_item_int(&unit_healths[1], "gameplay.units.healths.horseman");
+		config_print_debug_int("unit_healths[1] (gameplay.units.healths.horseman)", unit_healths[1]);
+		config_get_item_int(&unit_healths[2], "gameplay.units.healths.knight");
+		config_print_debug_int("unit_healths[2] (gameplay.units.healths.knight)", unit_healths[2]);
+		config_get_item_int(&unit_healths[3], "gameplay.units.healths.trebuchet");
+		config_print_debug_int("unit_healths[3] (gameplay.units.healths.trebuchet)", unit_healths[3]);
+		config_get_item_int(&unit_healths[4], "gameplay.units.healths.archer");
+		config_print_debug_int("unit_healths[4] (gameplay.units.healths.archer)", unit_healths[4]);
 
 		printf("\n");
 	}

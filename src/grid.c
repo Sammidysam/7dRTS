@@ -7,7 +7,7 @@
 #include <src/texture.h>
 #include <src/grid.h>
 
-void grid_draw(grid_t *grid)
+void grid_draw(grid_t *grid, int selected_tile)
 {
 	/* ensure correct line width */
 	glLineWidth(1.0f);
@@ -31,7 +31,7 @@ void grid_draw(grid_t *grid)
 	glEnable(GL_TEXTURE_2D);
 	
 	for(int i = 0; i < grid_tiles_len; i++)
-		grid_tile_draw(grid, &grid_tiles[i], (render_distance));
+		grid_tile_draw(grid, &grid_tiles[i], (render_distance), selected_tile);
 	
 	glDisable(GL_TEXTURE_2D);
 }
@@ -43,12 +43,12 @@ grid_t *grid_new()
 	return n;
 }
 
-void grid_tile_draw(grid_t *grid, tile_t *tile, double r)
+void grid_tile_draw(grid_t *grid, tile_t *tile, double r, int selected_tile)
 {
 	tile_t *grass = tile_new_from_type_ints(TILE_TYPE_GRASS, tile->location->x, tile->location->y);
 	
 	if (tile->type == TILE_TYPE_FOREST || tile->type == TILE_TYPE_CASTLE_WALL)
-		grid_tile_draw(grid, grass, (render_distance + 0.0001));
+		grid_tile_draw(grid, grass, (render_distance + 0.0001), selected_tile);
 
 	free(grass);
 
@@ -59,10 +59,14 @@ void grid_tile_draw(grid_t *grid, tile_t *tile, double r)
 		bool in_direction [4];
 		
 		for (int i = 0; i < 4; i++) {
-			int point = point_two_d_to_one_d(point_add_safe(tile_direction_add(i), tile->location), grid->width, grid->height);
+			point_t *add = point_add_safe(tile_direction_add(i), tile->location);
+			
+			int point = point_two_d_to_one_d(add, grid->width, grid->height);
 			
 			if (point > -1 && point < grid_tiles_len)
 				in_direction[i] = grid_tiles[point].type == TILE_TYPE_CASTLE_WALL;
+
+			free(add);
 		}
 
 		int directions = 0;
@@ -74,9 +78,14 @@ void grid_tile_draw(grid_t *grid, tile_t *tile, double r)
 		switch (directions) {
 		case 0: case 1:
 			tile->texture = castle_wall_texture;
+			
+			if ((in_direction[TILE_DIRECTION_UP] || in_direction[TILE_DIRECTION_DOWN]) && !(in_direction[TILE_DIRECTION_LEFT] || in_direction[TILE_DIRECTION_RIGHT]))
+				rotation_angle = 90.0;
+			
 			break;
 		case 2:
 			tile->texture = castle_corner_texture;
+			
 			if (in_direction[TILE_DIRECTION_LEFT] && in_direction[TILE_DIRECTION_UP])
 				rotation_angle = 90.0;
 			else if (in_direction[TILE_DIRECTION_LEFT] && in_direction[TILE_DIRECTION_DOWN])
@@ -85,9 +94,32 @@ void grid_tile_draw(grid_t *grid, tile_t *tile, double r)
 				rotation_angle = 270.0;
 			else
 				rotation_angle = 0.0;
+			
 			break;
 		case 3:
 			tile->texture = castle_three_texture;
+
+			int not;
+			for (int i = 0; i < 4; i++)
+				if (!in_direction[i])
+					not = i;
+
+			switch (not) {
+			case TILE_DIRECTION_UP:
+				rotation_angle = 180.0;
+				break;
+			case TILE_DIRECTION_LEFT:
+				rotation_angle = 270.0;
+				break;
+			case TILE_DIRECTION_RIGHT:
+				rotation_angle = 90.0;
+				break;
+			case TILE_DIRECTION_DOWN:
+			default:
+				rotation_angle = 0.0;
+				break;
+			}
+			
 			break;
 		case 4:
 			tile->texture = castle_four_texture;
@@ -109,6 +141,9 @@ void grid_tile_draw(grid_t *grid, tile_t *tile, double r)
 	
 	glBindTexture(GL_TEXTURE_2D, tile->texture);
 	{
+		if (point_two_d_to_one_d(tile->location, grid->width, grid->height) == selected_tile)
+			glColor3d(1.0, 0.0, 0.0);
+		
 		if (tile->type == TILE_TYPE_CASTLE_WALL) {
 			glPushMatrix();
 
@@ -137,5 +172,8 @@ void grid_tile_draw(grid_t *grid, tile_t *tile, double r)
 
 		if (tile->type == TILE_TYPE_CASTLE_WALL)
 			glPopMatrix();
+
+		if (point_two_d_to_one_d(tile->location, grid->width, grid->height) == selected_tile)
+			glColor3d(1.0, 1.0, 1.0);
 	}
 }

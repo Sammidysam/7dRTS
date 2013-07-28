@@ -35,4 +35,7 @@ extern castle_t *castles;
 
 extern player_t *players;
 
+extern int unit_attacks [5];
+extern int unit_healths [5];
+
 #endif
