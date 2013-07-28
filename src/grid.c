@@ -1,3 +1,4 @@
+#include <stdbool.h>
 
 #include <GL/glut.h>
 
@@ -50,6 +51,52 @@ void grid_tile_draw(grid_t *grid, tile_t *tile, double r)
 		grid_tile_draw(grid, grass, (render_distance + 0.0001));
 
 	free(grass);
+
+	double rotation_angle = 0.0;
+
+	if (tile->type == TILE_TYPE_CASTLE_WALL) {
+		/* get information about neighboring walls */
+		bool in_direction [4];
+		
+		for (int i = 0; i < 4; i++) {
+			int point = point_two_d_to_one_d(point_add_safe(tile_direction_add(i), tile->location), grid->width, grid->height);
+			
+			if (point > -1 && point < grid_tiles_len)
+				in_direction[i] = grid_tiles[point].type == TILE_TYPE_CASTLE_WALL;
+		}
+
+		int directions = 0;
+		for (int i = 0; i < 4; i++)
+			if (in_direction[i])
+				directions++;
+
+		/* set correct texture and angle */
+		switch (directions) {
+		case 0: case 1:
+			tile->texture = castle_wall_texture;
+			break;
+		case 2:
+			tile->texture = castle_corner_texture;
+			if (in_direction[TILE_DIRECTION_LEFT] && in_direction[TILE_DIRECTION_UP])
+				rotation_angle = 90.0;
+			else if (in_direction[TILE_DIRECTION_LEFT] && in_direction[TILE_DIRECTION_DOWN])
+				rotation_angle = 180.0;
+			else if (in_direction[TILE_DIRECTION_RIGHT] && in_direction[TILE_DIRECTION_DOWN])
+				rotation_angle = 270.0;
+			else
+				rotation_angle = 0.0;
+			break;
+		case 3:
+			tile->texture = castle_three_texture;
+			break;
+		case 4:
+			tile->texture = castle_four_texture;
+			break;
+		default:
+			tile->texture = castle_wall_texture;
+			break;
+		}
+	}
 	
 	double osx = (offset_x + -(grid->width / 2.0));
 	double osy = (offset_y + -(grid->height / 2.0));
@@ -62,6 +109,16 @@ void grid_tile_draw(grid_t *grid, tile_t *tile, double r)
 	
 	glBindTexture(GL_TEXTURE_2D, tile->texture);
 	{
+		if (tile->type == TILE_TYPE_CASTLE_WALL) {
+			glPushMatrix();
+
+			glTranslated(minx + 0.5, miny + 0.5, 0.0);
+			
+			glRotated(rotation_angle, 0.0, 0.0, 1.0);
+
+			glTranslated(-(minx + 0.5), -(miny + 0.5), 0.0);
+		}
+		
 		glBegin(GL_QUADS);
 
 		glTexCoord2d( 0.0,  0.0);
@@ -77,5 +134,8 @@ void grid_tile_draw(grid_t *grid, tile_t *tile, double r)
 		glVertex3d( minx,  maxy, -r);
 		
 		glEnd();
+
+		if (tile->type == TILE_TYPE_CASTLE_WALL)
+			glPopMatrix();
 	}
 }

@@ -231,6 +231,9 @@ void load_textures()
 	stone_texture = _texture_load_png_texture("img/stone.png");
 	farm_texture = _texture_load_png_texture("img/farm.png");
 	castle_wall_texture = _texture_load_png_texture("img/castle/wall/straight.png");
+	castle_corner_texture = _texture_load_png_texture("img/castle/wall/corner.png");
+	castle_three_texture = _texture_load_png_texture("img/castle/wall/three.png");
+	castle_four_texture = _texture_load_png_texture("img/castle/wall/four.png");
 	castle_tower_texture = _texture_load_png_texture("img/castle/tower.png");
 	error_texture = _texture_load_png_texture("img/error.png");
 	uninitialized_texture = _texture_load_png_texture("img/uninitialized.png");
