@@ -265,7 +265,7 @@ void initialize_board(int grid_width, int grid_height)
 			
 				point_t *distance = point_distance(location, castles[j].walls[0]->location);
 			
-				if (distance->x < 10 || distance->y < 10)
+				if (distance->x < 10 || distance->y < 10 || location->x == 0 || location->y == 0 || location->x == grid->width - 1 || location->y == grid->height - 1)
 					acceptable = false;
 
 				free(distance);
