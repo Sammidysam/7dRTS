@@ -21,4 +21,6 @@ typedef struct player_t {
 	player_resources_t resources;
 } player_t;
 
+player_t *player_new(player_type_t type);
+
 #endif

@@ -17,6 +17,8 @@
 #include <src/config.h>
 #include <src/texture.h>
 #include <src/point.h>
+#include <src/castle.h>
+#include <src/player.h>
 
 #include <src/main.h>
 
@@ -52,10 +54,6 @@ int zoom_in_key = KEY_CTRL_W;
 int zoom_out_key = KEY_CTRL_S;
 int reset_key = KEY_CTRL_R;
 int confirm_key = KEY_ENTER;
-
-grid_t *grid;
-
-player_t *players;
 
 draw_mode_t draw_mode = DRAW_MODE_MENU;
 
@@ -129,6 +127,13 @@ void init_rendering()
 
 void init_game()
 {
+	players = (player_t *)calloc(num_players, sizeof(player_t));
+	
+	for (int i = 0; i < num_players; i++)
+		players[i] = *player_new(i == 0 ? PLAYER_TYPE_HUMAN : PLAYER_TYPE_AI);
+
+	castles = (castle_t *)calloc(num_players, sizeof(castle_t));
+	
 	/* init grid */
 	grid = grid_new();
 	grid->width = 80;
@@ -168,9 +173,6 @@ void init_game()
 		}
 		putchar('\n');
 	}
-	
-	/* this is to set the array of players in the game */
-	// players = (player_t *)calloc(players, sizeof(player_t));
 }
 
 void init_buttons()

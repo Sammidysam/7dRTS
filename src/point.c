@@ -52,12 +52,22 @@ point_t *point_add(point_t *add_to, point_t *from)
 	return add_to;
 }
 
+point_t *point_add_safe(point_t *a_point, point_t *other_point)
+{
+	return point_new(a_point->x + other_point->x, a_point->y + other_point->y);
+}
+
 point_t *point_subtract(point_t *subtract_to, point_t *from)
 { 
 	subtract_to->x += from->x;
 	subtract_to->y += from->y;
 	
 	return subtract_to;
+}
+
+point_t *point_subtract_safe(point_t *a_point, point_t *other_point)
+{
+	return point_new(a_point->x - other_point->x, a_point->y - other_point->y);
 }
 
 point_t *point_distance(point_t *a_point, point_t *other_point)

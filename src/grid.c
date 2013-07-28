@@ -46,7 +46,7 @@ void grid_tile_draw(grid_t *grid, tile_t *tile, double r)
 {
 	tile_t *grass = tile_new_from_type_ints(TILE_TYPE_GRASS, tile->location->x, tile->location->y);
 	
-	if (tile->type == TILE_TYPE_FOREST)
+	if (tile->type == TILE_TYPE_FOREST || tile->type == TILE_TYPE_CASTLE_WALL)
 		grid_tile_draw(grid, grass, (render_distance + 0.0001));
 
 	free(grass);

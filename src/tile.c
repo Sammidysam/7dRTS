@@ -4,6 +4,8 @@
 
 #include <src/texture.h>
 #include <src/global.h>
+#include <src/castle.h>
+#include <src/player.h>
 
 #include <src/tile.h>
 
@@ -251,9 +253,38 @@ void initialize_board(int grid_width, int grid_height)
 
 	/* create castles */
 	for (int i = 0; i < num_players; i++) {
-		point_t *location = point_new(rand() % grid_width, rand() % grid_height);
-		for (int j = 0; j < i; j++) {
-			point_t *distance = point_distance(location, )
+		bool acceptable = false;
+
+		while (!acceptable) {
+			point_t *location = point_new(rand() % grid_width, rand() % grid_height);
+
+			bool acceptable = true;
+			for (int j = 0; j < i; j++) {
+				if (!acceptable)
+					break;
+			
+				point_t *distance = point_distance(location, castles[j].walls[0]->location);
+			
+				if (distance->x < 10 || distance->y < 10)
+					acceptable = false;
+
+				free(distance);
+			}
+
+			if (acceptable) {
+				castles[i] = *castle_new_point(&players[i], 4, 0, location);
+
+				castles[i].walls[0] = &grid_tiles[point_two_d_to_one_d(location, grid->width, grid->height)];
+				castles[i].walls[1] = &grid_tiles[point_two_d_to_one_d(point_add_safe(location, tile_direction_add(TILE_DIRECTION_UP)), grid->width, grid->height)];
+				castles[i].walls[2] = &grid_tiles[point_two_d_to_one_d(point_add_safe(location, tile_direction_add(TILE_DIRECTION_UP_LEFT)), grid->width, grid->height)];
+				castles[i].walls[3] = &grid_tiles[point_two_d_to_one_d(point_add_safe(location, tile_direction_add(TILE_DIRECTION_LEFT)), grid->width, grid->height)];
+
+				castle_set_tiles(&castles[i]);
+
+				break;
+			} else {
+				free(location);
+			}
 		}
 	}
 }

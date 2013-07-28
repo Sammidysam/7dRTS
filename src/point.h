@@ -19,7 +19,9 @@ int point_one_d_y(int one_d, int grid_width, int grid_height);
 bool point_equals(point_t *a_point, point_t *other_point);
 
 point_t *point_add(point_t *add_to, point_t *from);
+point_t *point_add_safe(point_t *a_point, point_t *other_point);
 point_t *point_subtract(point_t *subtract_to, point_t *from);
+point_t *point_subtract_safe(point_t *a_point, point_t *other_point);
 
 point_t *point_distance(point_t *a_point, point_t *other_point);
 

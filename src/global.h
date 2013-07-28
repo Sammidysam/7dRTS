@@ -7,6 +7,7 @@
 
 #include <src/grid.h>
 #include <src/tile.h>
+#include <src/castle.h>
 
 #define LEN(x) (sizeof(x) / sizeof(x[0]))
 
@@ -29,5 +30,9 @@ extern tile_t *grid_tiles;
 extern int grid_tiles_len;
 
 extern int num_players;
+
+extern castle_t *castles;
+
+extern player_t *players;
 
 #endif
