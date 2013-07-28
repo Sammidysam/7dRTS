@@ -63,6 +63,7 @@ int zoom_in_key = KEY_CTRL_W;
 int zoom_out_key = KEY_CTRL_S;
 int reset_key = KEY_CTRL_R;
 int confirm_key = KEY_ENTER;
+int menu_key = 'q';
 
 draw_mode_t draw_mode = DRAW_MODE_MENU;
 
@@ -80,7 +81,7 @@ void handle_mouse(int button, int state, int x, int y)
 { 
 	/* scroll wheel buttons */
 	if (state != GLUT_UP) { 
-		if (draw_mode != DRAW_MODE_MENU) {
+		if (draw_mode == DRAW_MODE_IN_GAME) {
 			if (button == mouse_zoom_in)
 				zoom_in();
 			else if (button == mouse_zoom_out)
@@ -276,6 +277,8 @@ void update(int value)
 						break;
 					}
 				}
+			} else if (i == menu_key) {
+				draw_mode = DRAW_MODE_MENU;
 			} else {
 				printf("Unsupported key %d pressed\n", i);
 			}
@@ -307,13 +310,30 @@ void draw_screen()
 		break;
 	case DRAW_MODE_HOW_TO_PLAY:
 		/* implement */
-		break;
 	case DRAW_MODE_SETTINGS:
 		/* implement */
-		break;
 	case DRAW_MODE_ERROR:
 	default:
-		/* draw error texture or something */
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, error_texture);
+		{
+			glBegin(GL_QUADS);
+
+			glTexCoord2d(0.0, 0.0);
+			glVertex3d(-20.0, -20.0, -(render_distance));
+
+			glTexCoord2d(1.0, 0.0);
+			glVertex3d(20.0, -20.0, -(render_distance));
+
+			glTexCoord2d(1.0, 1.0);
+			glVertex3d(20.0, 20.0, -(render_distance));
+
+			glTexCoord2d(0.0, 1.0);
+			glVertex3d(-20.0, 20.0, -(render_distance));
+			
+			glEnd();
+		}
+		glDisable(GL_TEXTURE_2D);
 		break;
 	}
 	
@@ -372,7 +392,7 @@ int main(int argc, char *argv[])
 	settings = "Settings";
 	
 	select_message = "Please select a save file to play.";
-	no_saves = "No saves detected!";
+	no_saves = "No saves detected!  Saves are found from the pattern \"saves/*.save\".";
 
 	save_list = (char **)calloc(save_manager_get_save_number(), sizeof(char *));
 	for (int i = 0; i < save_manager_get_save_number(); i++)
@@ -434,24 +454,25 @@ int main(int argc, char *argv[])
 		config_print_debug_int("mouse_zoom_in (control_handling.zoom_in_mouse)", mouse_zoom_in);
 		config_get_item_int(&mouse_zoom_out, "control_handling.zoom_out_mouse");
 		config_print_debug_int("mouse_zoom_out (control_handling.zoom_out_mouse)", mouse_zoom_out);
-		config_get_item_int(&quit_key, "control_handling.quit_keys");
-		config_print_debug_int("quit_key (control_handling.quit_keys)", quit_key);
-		config_get_item_int(&move_up_key, "control_handling.move_up_keys");
+		config_get_item_int(&quit_key, "control_handling.quit_key");
+		config_print_debug_int("quit_key (control_handling.quit_key)", quit_key);
+		config_get_item_int(&move_up_key, "control_handling.move_up_key");
 		config_print_debug_int("move_up_key (control_handling.move_up_key)", move_up_key);
-		config_get_item_int(&move_down_key, "control_handling.move_down_keys");
-		config_print_debug_int("move_down_key (control_handling.move_down_keys)", move_down_key);
-		config_get_item_int(&move_left_key, "control_handling.move_left_keys");
-		config_print_debug_int("move_left_key (control_handling.move_left_keys)", move_left_key);
-		config_get_item_int(&move_right_key, "control_handling.move_right_keys");
-		config_print_debug_int("move_right_key (control_handling.move_right_keys)", move_right_key);
-		config_get_item_int(&zoom_in_key, "control_handling.zoom_in_keys");
-		config_print_debug_int("zoom_in_key (control_handling.zoom_in_keys)", zoom_in_key);
-		config_get_item_int(&zoom_out_key, "control_handling.zoom_out_keys");
-		config_print_debug_int("zoom_out_key (control_handling.zoom_out_keys)", zoom_out_key);
-		config_get_item_int(&reset_key,"control_handling.reset_render_distance_keys");
-		config_print_debug_int("reset_key (control_handloing.reset_render_distance_keys)", reset_key);
-		config_get_item_int(&confirm_key, "control_handling.confirm_selection_keys");
-		config_print_debug_int("confirm_key (control_handling.confirm_selection_keys)", confirm_key);
+		config_get_item_int(&move_down_key, "control_handling.move_down_key");
+		config_print_debug_int("move_down_key (control_handling.move_down_key)", move_down_key);
+		config_get_item_int(&move_left_key, "control_handling.move_left_key");
+		config_print_debug_int("move_left_key (control_handling.move_left_key)", move_left_key);
+		config_get_item_int(&move_right_key, "control_handling.move_right_key");
+		config_print_debug_int("move_right_key (control_handling.move_right_key)", move_right_key);
+		config_get_item_int(&zoom_in_key, "control_handling.zoom_in_key");
+		config_print_debug_int("zoom_in_key (control_handling.zoom_in_key)", zoom_in_key);
+		config_get_item_int(&zoom_out_key, "control_handling.zoom_out_key");
+		config_print_debug_int("zoom_out_key (control_handling.zoom_out_key)", zoom_out_key);
+		config_get_item_int(&reset_key,"control_handling.reset_render_distance_key");
+		config_print_debug_int("reset_key (control_handloing.reset_render_distance_key)", reset_key);
+		config_get_item_int(&confirm_key, "control_handling.confirm_selection_key");
+		config_print_debug_int("confirm_key (control_handling.confirm_selection_key)", confirm_key);
+		config_get_item_int(&menu_key, "control_handling.go_to_menu_key");
 
 		printf("\n");
 	}
