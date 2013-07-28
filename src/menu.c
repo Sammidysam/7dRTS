@@ -101,12 +101,12 @@ void menu_draw_buttons(button_t buttons[], size_t button_num)
 	}
 }
 
-void menu_draw_text(char *name, char *description)
+void menu_draw_text(char *name, char *description, char *art_credits)
 {
 	void *font = GLUT_BITMAP_9_BY_15;
 
 	double x_multiplier = -20.0 / 1024.0;
-	double y_multiplier = 13.0 / 768.0;
+	double y_multiplier = 15.0 / 768.0;
 	
 	glRasterPos3d((double)window_width * x_multiplier, (double)window_height * y_multiplier, -40.0);
 	
@@ -114,12 +114,20 @@ void menu_draw_text(char *name, char *description)
 		glutBitmapCharacter(font, name[i]);
 
 	x_multiplier = -18.0 / 1024.0;
-	y_multiplier = 11.0 / 768.0;
+	y_multiplier = 13.0 / 768.0;
 
 	glRasterPos3d((double)window_width * x_multiplier, (double)window_height * y_multiplier, -40.0);
 
 	for (int i = 0; description[i] != '\0'; i++)
 		glutBitmapCharacter(font, description[i]);
+
+	x_multiplier = -18.0 / 1024.0;
+	y_multiplier = 11.0 / 768.0;
+
+	glRasterPos3d((double)window_width * x_multiplier, (double)window_height * y_multiplier, -40.0);
+
+	for (int i = 0; art_credits[i] != '\0'; i++)
+		glutBitmapCharacter(font, art_credits[i]);
 }
 
 void menu_select(direction_t direction, button_t *buttons, size_t button_len)

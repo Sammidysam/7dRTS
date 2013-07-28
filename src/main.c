@@ -32,6 +32,7 @@ bool key_down [256];
 
 char *name;
 char *description;
+char *art_credits;
 char *new_game;
 char *load_game;
 char *how_to_play;
@@ -278,7 +279,7 @@ void draw_screen()
 
 	switch (draw_mode) {
 	case DRAW_MODE_MENU:
-		menu_draw_text(name, description);
+		menu_draw_text(name, description, art_credits);
 		menu_draw_buttons(buttons, LEN(buttons));
 		break;
 	case DRAW_MODE_IN_GAME:
@@ -308,6 +309,7 @@ void clean_up()
 
 	free(name);
 	free(description);
+	free(art_credits);
 	free(new_game);
 	free(load_game);
 	free(how_to_play);
@@ -327,6 +329,7 @@ int main(int argc, char *argv[])
 	/* allocate memory */
 	name = (char *)calloc(1024, sizeof(char));
 	description = (char *)calloc(1024, sizeof(char));
+	art_credits = (char *)calloc(1024, sizeof(char));
 	new_game = (char *)calloc(1024, sizeof(char));
 	load_game = (char *)calloc(1024, sizeof(char));
 	how_to_play = (char *)calloc(1024, sizeof(char));
@@ -335,6 +338,7 @@ int main(int argc, char *argv[])
 	/* assign values */
 	name = "7dRTS";
 	description = "A submission for Mini Ludum Dare #44 7dRTS by Kristofer Rye (four04) and Sam Craig (Sammidysam)";
+	art_credits = "Art by Kristofer Rye (four04) and Michael Will";
 	new_game = "New Game";
 	load_game = "Load Game";
 	how_to_play = "How to Play";
@@ -368,6 +372,8 @@ int main(int argc, char *argv[])
 		
 		config_get_item_string(&description, "menu.game_description");
 		config_print_debug_string("description (menu.game_description)", description);
+		config_get_item_string(&art_credits, "menu.art_description");
+		config_print_debug_string("art_credits (menu.art_description)", art_credits);
 		config_get_item_string(&new_game, "menu.new_game_text");
 		config_print_debug_string("new_game (menu.new_game_text)", new_game);
 		config_get_item_string(&load_game, "menu.load_game_text");
