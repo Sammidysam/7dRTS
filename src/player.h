@@ -19,11 +19,11 @@ typedef struct player_resources_t {
 typedef struct player_t {
 	player_type_t type;
 	
-	double approval_rating;
+	double disapproval_rating;
 	player_resources_t *resources;
 
-	army_t *armies;
 	int army_size;
+	army_t *armies;
 } player_t;
 
 player_t *player_new(player_type_t type);

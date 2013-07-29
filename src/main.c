@@ -168,6 +168,13 @@ void init_game()
 	/* initialize board */
 	initialize_board(grid->width, grid->height);
 
+	/* create armies for each player */
+	for (int i = 0; i < num_players; i++) {
+		army_t *army = army_new(castles[i].primary_location);
+
+		player_new_army(&players[i], army);
+	}
+
 	printf("drawing grid...\n");
 	printf("\t,=grass\n");
 	printf("\tT=forest\n");
@@ -297,15 +304,23 @@ void update(int value)
 			} else if (i == tile_up_key) {
 				if (point_add_safe(tile_direction_add(TILE_DIRECTION_UP), grid_tiles[selected_grid_tile].location)->y < grid->height)
 					selected_grid_tile += grid->width;
+				
+				key_down[i] = false;
 			} else if (i == tile_down_key) {
 				if (point_add_safe(tile_direction_add(TILE_DIRECTION_DOWN), grid_tiles[selected_grid_tile].location)->y > -1)
 					selected_grid_tile -= grid->width;
+				
+				key_down[i] = false;
 			} else if (i == tile_left_key) {
 				if (point_add_safe(tile_direction_add(TILE_DIRECTION_LEFT), grid_tiles[selected_grid_tile].location)->x > -1)
 					selected_grid_tile--;
+				
+				key_down[i] = false;
 			} else if (i == tile_right_key) {
 				if (point_add_safe(tile_direction_add(TILE_DIRECTION_RIGHT), grid_tiles[selected_grid_tile].location)->x < grid->width)
 					selected_grid_tile++;
+				
+				key_down[i] = false;
 			} else {
 				printf("Unsupported key %d pressed\n", i);
 			}
@@ -331,6 +346,11 @@ void draw_screen()
 		break;
 	case DRAW_MODE_IN_GAME:
 		grid_draw(grid, selected_grid_tile);
+		for (int i = 0; i < num_players; i++) {
+			for (int j = 0; j < players[i].army_size; j++) {
+				/* draw army indicators */
+			}
+		} 
 		break;
 	case DRAW_MODE_LOAD_GAME:
 		save_manager_draw_saves(save_list, select_message, no_saves, selected_save);
