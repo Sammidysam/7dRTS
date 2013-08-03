@@ -10,3 +10,8 @@ There are some `.dll` files that must be packaged with the Windows executable fo
 - libpng15-15.dll
 - zlib1.dll
 - libconfig-9.dll
+
+License
+=======
+
+This game is licensed under the GNU General Public License version 3. To see the license, visit the file [LICENSE](LICENSE).
